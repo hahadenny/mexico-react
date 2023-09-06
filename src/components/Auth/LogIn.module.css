@@ -1,0 +1,30 @@
+.linkStyling {
+    text-decoration: none;
+    color: #68FFDC;
+    margin-left: 10px;
+}
+
+.errorValidation {
+    color: #dc3545;
+    font-size: 12px;
+    text-align: center;
+    width: 100%;
+}
+
+.successRegistered {
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    width: 100%;
+}
+
+.forgotBox {
+    font-family: Aeonic, sans-serif !important;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.loginButton {
+    font-family: Aeonic, sans-serif !important;
+    font-weight: 700;
+}

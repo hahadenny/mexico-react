@@ -1,0 +1,4 @@
+@import "../vars.module";
+@import "./mixins.module";
+
+@include exportModePaletteToJs($palette, 'dark');

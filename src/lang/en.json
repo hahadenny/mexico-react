@@ -1,0 +1,22 @@
+{
+ "TopTitle": "México {raceType} Election",
+ "TopTitlePresidential": "México Presidential Election",
+ "TopTitleGubernational": "México Gubernational Election",
+ "TopTitleCongressional": "México Congressional Election",
+ "Presidential": "Presidential",
+ "Gubernatorial": "Gubernatorial",
+ "Congressional": "Congressional",
+ "AddBookmark": "Add Bookmark",
+ "Bookmarks": "Bookmarks",
+ "VoteCircles": "Vote Circles",
+ "Settings": "Settings",
+ "Logout": "Logout",
+ "GeneralResults": "General",
+ "MarginResults": "Marginal",
+ "Turnout": "Turnout",
+ "ForceMunicipals": "Force Municipals",
+ "ForceDistricts": "Force Districts",
+ "Votes": "{votes} Votes Total",
+ "Votes2": "{votes}",
+ "WinnerPopup": "Winner"
+}

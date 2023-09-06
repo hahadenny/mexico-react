@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30.286" height="30.929" viewBox="0 0 30.286 30.929" fill="red">
+  <g id="Сгруппировать_268" data-name="Сгруппировать 268" transform="translate(-956.334 -74.643)">
+    <g id="Сгруппировать_176" data-name="Сгруппировать 176" transform="translate(67 -0.357)">
+      <path id="Path_playlist-check" data-name="Path / playlist-check" d="M20.286,13.143H2v3.571H20.286V13.143m0-7.143H2V9.571H20.286V6M2,23.857H20.286V20.286H7.648v3.571" transform="translate(899.334 69)" fill="#8E8E8E"/>
+    </g>
+    <g id="MDI_arrow-left-bottom" data-name="MDI / arrow-left-bottom" transform="translate(956.334 81.571)">
+      <g id="Boundary" fill="#68FFDC" stroke="rgba(0,0,0,0)" stroke-width="1" opacity="0">
+        <rect width="24" height="24" stroke="none"/>
+        <rect x="0.5" y="0.5" width="23" height="23" fill="none"/>
+      </g>
+      <path id="Path_arrow-left-bottom" data-name="Path / arrow-left-bottom" d="M4,4v6.5A6.5,6.5,0,0,0,10.5,17h5.67l-3.09,3.09L14.5,21.5,20,16l-5.5-5.5-1.41,1.41L16.17,15H10.5A4.481,4.481,0,0,1,6,10.5V4Z" transform="translate(0 -1)" fill="#8E8E8E"/>
+    </g>
+  </g>
+</svg>

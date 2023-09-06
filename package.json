@@ -1,0 +1,57 @@
+{
+  "name": "chronos-election-v2",
+  "version": "0.1.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "browserslist": [
+    "defaults",
+    "not ie 11"
+  ],
+  "author": "Disguise Systems",
+  "license": "ISC",
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mantine/core": "^6.0.11",
+    "@mantine/hooks": "^6.0.11",
+    "@mantine/modals": "^6.0.15",
+    "@mantine/notifications": "^6.0.15",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.14.5",
+    "@reduxjs/toolkit": "^1.9.5",
+    "@tabler/icons-react": "^2.20.0",
+    "@turf/bbox": "^6.5.0",
+    "@turf/centroid": "^6.5.0",
+    "ag-grid-community": "^29.1.0",
+    "ag-grid-enterprise": "^29.1.0",
+    "ag-grid-react": "^29.1.0",
+    "aws-sdk": "^2.1380.0",
+    "axios": "^1.4.0",
+    "formik": "^2.4.2",
+    "mapbox-gl": "^2.14.1",
+    "react": "^18.2.0",
+    "react-auth-kit": "^2.12.2",
+    "react-color": "^2.19.3",
+    "react-dom": "^18.2.0",
+    "react-intl": "^6.4.4",
+    "react-redux": "^8.0.7",
+    "react-router-dom": "^6.13.0",
+    "react-scripts": "^5.0.1",
+    "react-sketch-canvas": "^6.2.0",
+    "reactcss": "^1.2.3",
+    "remove-accents": "^0.5.0",
+    "sass": "^1.62.1",
+    "typescript": "^4.9.5",
+    "voca": "^1.4.1",
+    "yup": "^1.2.0"
+  }
+}

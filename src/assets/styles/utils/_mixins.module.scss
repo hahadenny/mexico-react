@@ -1,0 +1,114 @@
+@import "./functions.module";
+
+/**
+  Recursively parse a SASS map into key:value pairs
+  of CSS properties
+ */
+@mixin recursiveGetMap($map) {
+  @each $key, $value in $map {
+    @if type-of($value) == map {
+      // value is a map, call again
+      @include recursiveGetMap($value);
+    } @else {
+      --#{unquote($key)}: #{$value};
+    }
+  }
+}
+
+/**
+  Recursively parse a SASS map, concatenating
+  the nested keys to the property name
+
+  @param [SASS map] $map
+  @param [string] $prevKey -- string to concatenate in property name
+  @param [boolean] $camel-case -- make property name camel case
+
+----------------------------------------------
+  Ex)
+  // SASS map:
+  $theme: (
+    "dark": (
+      "primary": (
+        "main": #68FFDC,
+        "paper": #111111,
+      )
+    )
+  );
+
+  @include flattenVarsMap($theme, '', true);
+
+  // Output:
+  darkPrimaryMain: '#68FFDC', darkPrimaryPaper: '#111111'
+
+  // -- IN SCSS ---------
+  @import "vars.module";
+
+  :root {
+    @include flattenVarsMap($theme);
+
+    // Output: --dark-primary-main: '#68FFDC'
+  }
+----------------------------------------------
+ */
+@mixin flattenVarsMap($map, $prevKey: '', $camel-case: false) {
+  @each $key, $value in $map {
+
+    @if $key == null {
+      @include flattenVarsMap($value, $key, $camel-case);
+    }
+
+    $var-name: unquote($key);
+
+    @if($prevKey != ''){
+      // slugify the property name
+      $var-name: str-insert(str-insert(unquote($prevKey), '-', -1), $var-name, -1);
+    }
+
+    @if($camel-case){
+      $var-name: camelize($var-name);
+    }
+
+    @if type-of($value) == map {
+      @include flattenVarsMap($value, $var-name, $camel-case);
+    } @else {
+
+      @if type-of($value) == string {
+        $value: unquote($value);
+      }
+
+      @if($camel-case){
+        #{$var-name}: $value;
+      } @else {
+        // output as css custom property
+        --#{$var-name}: #{$value};
+      }
+    }
+  }
+}
+
+/**
+  Recursively flatten map with camel cases props
+ */
+@mixin flattenMapForJs($map, $prevKey: ''){
+  @include flattenVarsMap($map, $prevKey, true);
+}
+
+@mixin exportMapToJs($map, $prevKey: ''){
+  :export {
+    @include flattenMapForJs($map, $prevKey: '');
+  }
+}
+
+// *********************************************************************
+// ** Specific to _vars.module
+// *********************************************************************
+
+/**
+  Get the color palette for the specified mode and
+  export it to JS (camel case props)
+ */
+@mixin exportModePaletteToJs($palette-map, $mode: 'dark'){
+  :export {
+    @include flattenMapForJs(modePaletteMap($palette-map, $mode));
+  }
+}

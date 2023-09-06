@@ -1,0 +1,22 @@
+{
+ "TopTitle" : "Elección {raceType}",
+ "TopTitlePresidential" : "México Elección Presidencial",
+ "TopTitleGubernational" : "México Elección Gubernaturas",
+ "TopTitleCongressional" : "México Elección Diputaciones",
+ "Presidential": "Presidencial",
+ "Gubernatorial": "Gubernaturas",
+ "Congressional": "Diputaciones",
+ "AddBookmark": "Agregar Etiqueta",
+ "Bookmarks": "Etiquetas",
+ "VoteCircles": "Burbujas",
+ "Settings": "Configuración",
+ "Logout": "Salir",
+ "GeneralResults": "Generales",
+ "MarginResults": "Márgenes",
+ "Turnout": "Participación",
+ "ForceMunicipals": "Ver Muni",
+ "ForceDistricts": "Ver Dist",
+ "Votes": " {votes} Votos Totales",
+ "Votes2": "{votes}",
+ "WinnerPopup": "Gana"
+}

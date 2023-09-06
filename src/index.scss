@@ -1,0 +1,542 @@
+@import "./variables";
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color:#fff;
+}
+
+.root {
+  display: flex;
+}
+
+.map-container {
+  height: 100%;
+  width: 100%;
+}
+
+.MuiInput-underline {
+  border-bottom: solid 1px var(--primary-main);
+}
+
+.ag-theme-alpine {
+    --ag-background-color: transparent !important;
+    --ag-odd-row-background-color: transparent !important;
+    --ag-selected-row-background-color: rgba(61,61,61,0.3) !important;
+    --ag-row-hover-color: rgba(188,188,188,0.3) !important;
+    --ag-secondary-border-color: #ddd !important;
+}
+
+.ag-header-cell-label {
+    justify-content: center;
+}
+
+.ag-cell {
+    text-align: left;
+    border: 1px transparent !important;
+}
+
+.ag-body-horizontal-scroll-viewport {
+    overflow-x: hidden !important;
+}
+
+.ag-cell-value {
+    // overflow: hidden;
+    overflow: visible !important;
+}
+
+.ag-row-drag {
+    margin-right: 9px !important;
+}
+
+#menuBookmarkslisting .ag-header, #menuBookmarkslisting .ag-body-horizontal-scroll, #menuBookmarkslisting .ag-body-vertical-scroll {
+    display: none;
+}
+
+#menuBookmarkslisting .ag-root-wrapper {
+    border: none;
+}
+
+#menuBookmarkslisting .ag-center-cols-viewport {
+    overflow-x: hidden;
+}
+
+#menuBookmarkslisting .ag-text-field-input {
+    margin-left: 8px;
+}
+
+.MuiDialogTitle-root {
+    color: var(--primary-main);
+}
+
+.MuiPaper-root {
+    border: solid 1px var(--primary-main);
+}
+
+.mantine-Modal-header {
+    padding: 0px;
+    padding-right: 5px;
+    padding-top: 5px;
+}
+
+.mantine-Modal-inner {
+    padding-left: 0px;
+}
+
+.mantine-TextInput-input {
+    border: none;
+    border-bottom: solid 1px var(--primary-main);
+    padding: 0px;
+}
+
+.mantine-Dialog-closeButton {
+    top: 5px;
+    right: 5px;
+}
+
+#raceboard.board-opened {
+  animation: linearwipe 0.7s steps(100, end), flash 1s steps(100, end); 
+}
+
+@keyframes linearwipe{ 
+  from { 
+    background:linear-gradient(rgba(133, 133, 133, 0.3),rgba(133, 133, 133, 0.3)) left/0% 100% no-repeat;     
+  } 
+  to {
+    background-size:200% 200%;
+    background-position:left;
+  }
+} 
+
+@keyframes flash{ 
+  from { 
+    opacity: 0;  
+  } 
+  to {
+  }
+} 
+
+.mantine-Navbar-root .mantine-Text-root {
+    background-color: rgba(188,188,188,0.3);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 0px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    text-align: center;
+    border-left: solid 13px #5a5a5a;
+}
+
+.mantine-Navbar-root .mantine-Group-root {
+    margin-left: -48px;
+}
+
+.mantine-ActionIcon-root {
+    color: #000;
+}
+
+.mantine-ActionIcon-root:hover {
+    background-color: rgba(254,254,254,0.5) !important;
+}
+
+.mantine-Switch-track {
+    background-color: #000 !important;
+    border-color: #000 !important;
+    color: #fff !important;
+    font-size: 10px;
+}
+
+.mantine-Modal-overlay {
+    z-index: 201 !important;
+}
+
+.mantine-NumberInput-label {
+    word-break: inherit !important;
+}
+
+.mantine-NumberInput-input {
+    padding-left: 3px !important;
+}
+
+@media (min-width: 48em) {
+    .mantine-Navbar-root {
+        width: 7.5%;
+        min-width: 7.5%;
+    }
+}
+
+.chrome-picker {
+    width: 145px !important;
+}
+
+.mapboxgl-popup-content {
+    color: #373232;
+    padding: 1px 12px;
+    font-size: 11px;
+    // background-color: rgba(238,238,238,0.8);
+    background-color: rgba(255,255,255,0.8);
+    backdrop-filter: blur(8px);
+    // border: solid 2px $primary_hex;
+    border: solid 2px #ffffff;
+}
+
+.mapboxgl-popup-tip {
+    border-top-color: #eeeeee !important;
+    border-bottom-color: #eeeeee !important;
+    display:none;
+}
+
+.flexbox-fix input {
+    background-color: #fff;
+}
+
+.topBar {
+    box-shadow: none !important;
+}
+
+.raceCandBox {
+    margin-top: -1px;
+}
+
+// Mapbox attribution section
+.mapboxgl-ctrl-bottom-left {
+    left: 8%;
+}
+.mapboxgl-ctrl-attrib-inner > a[title*="OpenStreetMap"] {
+    display: none;
+}
+// END Mapbox attribution section
+
+.mapboxgl-popup-content {
+    padding: 0;
+    margin: 0;
+    width: 280px;
+    background-color: white;
+    border: solid 1px #fff;
+    padding-bottom: 0.3rem;
+    border-bottom-left-radius: 10px 10px;
+    border-bottom-right-radius: 10px 10px;
+}
+
+.mapPopup {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+    line-height: 2rem;
+    font-weight: bold;
+}
+
+.mapPopupTitle {
+    flex: 1;
+    color: white;
+    font-size: 1.3rem;
+    margin-bottom: 1.3rem;
+}
+
+.mapPopupLocation {
+    flex: 1;
+    font-size: 1rem;
+    line-height: 0.8rem;
+}
+
+.mapPopupParty {
+    flex: 1;
+    font-size: 1.3rem;   
+    margin-bottom: 1.3rem; 
+}
+
+.mapPopupVotes {
+    flex: 1;
+    color: white;
+    font-size: 0.75rem;
+    line-height: 1.5rem;
+    background-color: black;
+}
+
+@media screen and (min-width: 3000px) {
+    :root {
+        --ag-grid-size: 11px !important;
+    }
+
+    .mantine-Navbar-root {
+        margin-top: 170px;
+    }
+
+    .mantine-Dialog-closeButton {
+        scale: 2;
+        top: 20px;
+        right: 20px;
+    }
+    
+    .home {
+        font-size: 35px !important;
+        margin-bottom: 15px;
+        padding: 12px 0px !important;
+    }
+    
+    .tabler-icon-home {
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+
+    .mantine-Navbar-root .mantine-Text-root {
+        font-size: 28px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        border-left: solid 15px #5a5a5a;
+    }
+    
+    .mantine-Navbar-root .mantine-Input-input,  .mantine-Navbar-root .mantine-InputWrapper-label, .menuLabel {
+        font-size: 28px;
+    }
+    
+    .mantine-Navbar-root  .mantine-NumberInput-input {
+        height: 49px;
+    }
+    
+    .mantine-Navbar-root .mantine-Group-root {
+        font-size: 28px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+    
+    .mantine-Navbar-root .mantine-UnstyledButton-root {
+        border-left: solid 35px #000;
+        padding-left: 40px;
+    }
+    
+    .mantine-Switch-track {
+        font-size: 14px;
+    }
+
+    .mapboxgl-popup-content {
+        scale: 2;
+    }
+    
+    .raceboard {
+        width: 1050px !important;
+        border-left: solid 12px $primary_hex !important;
+        font-size: 31px !important;
+        height: calc(100vh - 212px) !important;
+    }
+    
+    .raceboardTitleBox {
+        border-bottom: solid 7px #111 !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .raceboardTitle {
+        font-size: 90px !important;
+        line-height: 90px !important;
+        padding-top: 19px !important;
+    }
+
+    .raceboardSubtitle {
+        font-size: 50px !important;
+        font-weight: normal;
+        line-height: 50px !important;
+        padding-bottom: 13px !important;
+    }
+    
+    .raceCheck {
+        margin-left: -9px !important;
+        width: 60px !important;
+        height: 60px !important;
+    }
+    
+    .partyBox {
+        margin-top: 10px !important;
+        height: 25%;
+    }
+    
+    .partySubBox {
+        border-bottom: solid 2px #111 !important;
+    }
+    
+    .party4SubBox {
+        margin-bottom: 10px !important;
+    }
+    
+    .racePartyName {
+        font-size: 63px !important;
+        line-height: 63px !important;
+        padding-bottom: 10px !important;
+    }
+    
+    .raceName {
+        height: 260px !important;        
+        font-size: 44px;
+    }
+    
+    .raceTitle {
+        font-size: 25px !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .raceCandBox {
+        padding-left: 5px !important;
+        padding-top: 25px !important;
+    }  
+    
+    .percentNum {
+        font-size: 170px !important;
+    }
+    
+    .percent {
+        font-size: 55px !important;
+    }
+    
+    .voteNum {
+        font-size: 45px !important;
+        margin-top: -35px !important;
+        margin-right: 55px !important;
+    }
+
+    .mapboxgl-popup-content {
+        padding: 0;
+        margin: 0;
+        width: 280px;
+        background-color: white;
+        border: solid 1px #fff;
+        padding-bottom: 0.3rem;
+        border-bottom-left-radius: 10px 10px;
+        border-bottom-right-radius: 10px 10px;
+    }
+    
+    .topBar {
+        height:212px;
+    }
+    
+    .topLogo {
+        height: 212px !important;
+        max-width: 368px !important;
+    }
+    
+    .yearText {
+        font-size: 127px !important;
+    }
+    
+    .topTitleText {
+        font-size: 8rem !important;        
+    }
+    
+    .ag-cell-value {
+        font-size: 28px;
+        padding-left: 3px; 
+        margin-top: 20px;
+    }
+    
+    .ag-icon {
+        font-size: 30px !important; 
+        margin-top: 23px;
+    }
+    
+    .ag-row {
+        height: 85px !important;
+    }
+        
+    .mantine-Navbar-root .mantine-ActionIcon-root {
+        border-left: none !important;
+        padding-left: 0px !important;
+        margin-top: -40px !important;
+        width: 2.5rem;
+        min-height: 2.5rem;
+    }
+    
+    .mantine-Navbar-root .MuiSvgIcon-root {
+        font-size: 2.5rem !important;
+    }
+    
+    .bookmark_action {
+        margin-left: -4px !important;
+    }
+    
+    .loginBox {
+        max-width: 700px;
+    }
+    
+    #login .title {
+        font-size: 127px !important;
+    }
+    
+    #login .mantine-Button-root {
+        margin-top: 74px !important;
+    }
+    
+    .mantine-Paper-root .mantine-Text-root, #login .mantine-Text-root {
+        font-size: 33px;
+    }
+    
+    .mantine-Paper-root .mantine-Button-root, #login .mantine-Button-root {
+        font-size: 28px;
+        margin: 18px;
+        height: 60px;
+    }
+    
+    .mantine-Paper-root .mantine-Title-root, #login .mantine-Title-root {
+        font-size: 45px;
+    }
+    
+    .mantine-Paper-root .mantine-TextInput-label, #login .mantine-TextInput-label, #login .mantine-TextInput-error  {
+        font-size: 28px;
+    }
+    
+    .mantine-Paper-root .mantine-TextInput-input, #login .mantine-TextInput-input {
+        font-size: 28px;
+        height: 77px;
+        border-bottom: solid 2px $primary_hex;
+    }
+    
+    .mantine-Notification-root {
+        width: 650px;
+        right: 200px;
+    }
+    
+    .mantine-Notification-description {
+        font-size: 30px;        
+    }
+    
+    .chrome-picker {
+        width: 288px !important;
+    }
+    
+    .chrome-picker input { 
+        font-size: 28px !important;
+        padding: 10px 0px 7px 0px;
+    }
+    
+    .chrome-picker label { 
+        font-size: 16px !important;
+        margin-top: 3px !important;
+    }
+    
+    .colorPickerPop .flexbox-fix:nth-of-type(1) div:nth-of-type(1) div:nth-of-type(1) {
+        height: 20px !important;
+        margin-top: 0px !important;
+        padding-left: 5px;
+    }
+    
+    .colorPickerColor {
+        width: 40px !important;
+        height: 40px !important;
+    }
+    
+    .colorPickerPop {
+        left: -15px !important;
+        top: -315px !important;
+        width: 288px !important;
+    }
+    
+    .hue-horizontal {
+        height: 20px !important;
+        margin-top: -5px;
+    }
+    
+    .hue-horizontal div div {
+        width: 12px !important;
+        height: 20px !important;
+    }
+}

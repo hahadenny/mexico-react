@@ -1,0 +1,74 @@
+@import "./utils/mixins.module";
+@import "../../variables";
+
+/**
+  Reusable variables to ensure our CSS values match the MUI theme
+ */
+
+/**
+  The color theme mode we'd like to use
+ */
+$current-mode: 'dark';
+
+/**
+ Color palettes
+ */
+$palette: (
+  "dark":( // mode
+    "primary": (
+      "main": $primary_hex,
+    ),
+    "secondary": (
+      "main": #F56135,
+    ),
+    "background": (
+      "default": #ffffff,
+      "paper": #ffffff
+    ),
+    "success": (
+      "main": #17AB13,
+    ),
+    "text": (
+      "main": #201717,
+    ),
+    "border": (
+      "main": #cccccc,
+    ),
+    "status": (
+      "playing": #067844,
+      "next": #706406,
+    )
+  )
+);
+
+/**
+  Other styles
+ */
+$styles: (
+  "font": (
+    "main": (
+      "family": "Aeonic, sans-serif",
+      "color": map-get($palette, $current-mode, "text", "main"),
+      "size": 20
+    )
+  ),
+  /**
+    palette derivatives (colors using palette colors)
+    NOT CURRENTLY WORKING
+  */
+  //"status-icon": (
+  //  "playing": map-get($palette, $current-mode, "status", "playing"),
+  //  "next": map-get($palette, $current-mode, "status", "next"),
+  //)
+);
+
+:root {
+  // make sure the browser defaults match our color scheme
+  color-scheme: #{$current-mode};
+  // make color-scheme-related vars easily usable in
+  // other scss files as custom CSS properties
+  @include flattenVarsMap(modePaletteMap($palette, $current-mode));
+  // make other style vars easily usable in
+  // other scss files as custom CSS properties
+  //@include flattenVarsMap(map-get($styles, $current-mode));
+}

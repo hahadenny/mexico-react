@@ -1,0 +1,147 @@
+/**
+  @author pascalduez
+  @url https://gist.github.com/pascalduez/10011785
+  @date 2022-06-28
+
+  Capitalize string
+
+  @param [string] $string
+  @return [string]
+ */
+@function capitalize($string) {
+  @return to-upper-case(str-slice($string, 1, 1)) + str-slice($string, 2);
+}
+
+// Alias of capitalize()
+@function str-ucfirst($string) {
+  @return capitalize($string);
+}
+
+/*********************************************************
+  @author pascalduez
+  @url https://gist.github.com/pascalduez/10011785
+  @date 2022-06-28
+
+  Capitalize each word in string
+
+  @param [string] $string
+  @return [string]
+ */
+@function str-ucwords($string) {
+  $progress: $string;
+  $result: "";
+
+  $running: true;
+
+  @while $running {
+    $index: str-index($progress, " ");
+    @if $index {
+      $result: $result + capitalize(str-slice($progress, 1, $index));
+      $progress: str-slice($progress, ($index + 1));
+    } @else {
+      $running: false;
+    }
+  }
+
+  @return capitalize($result) + capitalize($progress);
+}
+
+/*********************************************************
+  @author pascalduez
+  @url https://gist.github.com/pascalduez/10011785
+  @date 2022-06-28
+
+  Return whether `$value` is contained in `$list`
+
+  @param [list] $list
+  @param [$value] $value
+
+  @return [boolean]
+ */
+@function contain($list, $value) {
+  @return not not index($list, $value);
+}
+
+/*********************************************************
+  @author pascalduez
+  @url https://gist.github.com/pascalduez/10011785
+  @date 2022-06-28
+
+  Convert string to camel case
+
+  @param [string] $string
+  @return [string]
+ */
+@function camelize($string) {
+  $progress: $string;
+  $result: "";
+  $exclude: " ", "-", "–", "—", "_", ",", ";", ":", ".";
+
+  @while str-length($progress) > 0 {
+    $char: str-slice($progress, 1, 1);
+
+    @if contain($exclude, $char) {
+      $progress: capitalize(str-slice($progress, 2, 2)) + str-slice($progress, 3);
+    } @else {
+      $result: $result + $char;
+      $progress: str-slice($progress, 2);
+    }
+  }
+
+  @return $result;
+}
+
+/// Replace `$search` with `$replace` in `$string`
+///
+/// @author Kitty Giraudel
+/// @url https://css-tricks.com/snippets/sass/str-replace-function/
+///
+/// @param {String} $string - Initial string
+/// @param {String} $search - Substring to replace
+/// @param {String} $replace ('') - New value
+/// @return {String} - Updated string
+@function str-replace($string, $search, $replace: '') {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace + str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+  }
+
+  @return $string;
+}
+
+/**
+  Replace common non-alphanumeric chars to convert string to slug
+ *
+@function slugify($string) {
+  $progress: $string;
+  $result: "";
+  $exclude: " ", "—", "_", ",", ";", ":", ".";
+
+  @while str-length($progress) > 0 {
+    $char: str-slice($progress, 1, 1);
+    $i: index($exclude, $char);
+
+    @if($i != null){
+      $progress: str-replace($progress, $char, '-');
+    } @else {
+      $result: $result + $char;
+      $progress: str-slice($progress, 2);
+    }
+  }
+
+  @return $result;
+}
+ */
+
+
+// *********************************************************************
+// ** Specific to _vars.module
+// *********************************************************************
+
+/**
+  Get the color palette map for the specified mode
+ */
+@function modePaletteMap($palette-map, $mode: 'dark'){
+  @return map-get($palette-map, $mode)
+}
