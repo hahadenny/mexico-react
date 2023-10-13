@@ -22,7 +22,7 @@ export const Urls = {
     state: "mapbox://wilsonli.cong-mx-2015-state-v3"
   },
   "cong-2021": {
-    mun: "mapbox://wilsonli.cong-mx-2021-mun-v8",
+    mun: "mapbox://wilsonli.cong-mx-2021-mun-v9",
     "mun-centroids": "mapbox://wilsonli.cong-mx-2021-mun-centroids-v8",
     dis: "mapbox://wilsonli.cong-mx-2021-dis-v2",
     "dis-centroids": "mapbox://wilsonli.cong-mx-2021-dis-centroids-v2",

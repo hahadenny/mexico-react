@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin&display=swap');
 @import "./variables";
 
 body {
@@ -169,6 +170,10 @@ body {
     width: 145px !important;
 }
 
+.mapboxgl-map {
+    font-family: 'Libre Franklin', sans-serif !important;
+}
+
 .mapboxgl-popup-content {
     color: #373232;
     padding: 1px 12px;
@@ -177,7 +182,7 @@ body {
     background-color: rgba(255,255,255,0.8);
     backdrop-filter: blur(8px);
     // border: solid 2px $primary_hex;
-    border: solid 2px #ffffff;
+    border: solid 2px #ffffff;    
 }
 
 .mapboxgl-popup-tip {
@@ -195,7 +200,7 @@ body {
 }
 
 .raceCandBox {
-    margin-top: -1px;
+    margin-top: -7px;
 }
 
 // Mapbox attribution section
@@ -214,8 +219,8 @@ body {
     background-color: white;
     border: solid 1px #fff;
     padding-bottom: 0.3rem;
-    border-bottom-left-radius: 10px 10px;
-    border-bottom-right-radius: 10px 10px;
+    border-bottom-left-radius: 3px 3px;
+    border-bottom-right-radius: 3px 3px;
 }
 
 .mapPopup {
@@ -231,7 +236,7 @@ body {
     flex: 1;
     color: white;
     font-size: 1.3rem;
-    margin-bottom: 1.3rem;
+    margin-bottom: 0rem;
 }
 
 .mapPopupLocation {
@@ -243,15 +248,16 @@ body {
 .mapPopupParty {
     flex: 1;
     font-size: 1.3rem;   
-    margin-bottom: 1.3rem; 
+    margin-bottom: 0rem; 
+    margin-top: 0.3rem;
 }
 
 .mapPopupVotes {
     flex: 1;
-    color: white;
+    color: #000;
     font-size: 0.75rem;
     line-height: 1.5rem;
-    background-color: black;
+    background-color: #fff;
 }
 
 @media screen and (min-width: 3000px) {
@@ -317,14 +323,14 @@ body {
     }
     
     .raceboard {
-        width: 1050px !important;
-        border-left: solid 12px $primary_hex !important;
+        width: 1000px !important;
+        #border-left: solid 12px $primary_hex !important;
         font-size: 31px !important;
         height: calc(100vh - 212px) !important;
     }
     
     .raceboardTitleBox {
-        border-bottom: solid 7px #111 !important;
+        #border-bottom: solid 7px #111 !important;
         margin-bottom: 20px !important;
     }
     
@@ -342,38 +348,67 @@ body {
     }
     
     .raceCheck {
-        margin-left: -9px !important;
-        width: 60px !important;
-        height: 60px !important;
+        margin-left: 0px !important;
+        width: 40px !important;
+        height: 40px !important;
     }
     
     .partyBox {
+        padding-top: 1.5rem !important;
         margin-top: 10px !important;
+        margin-bottom: 0.9rem !important;
         height: 25%;
     }
     
     .partySubBox {
-        border-bottom: solid 2px #111 !important;
+        #border-bottom: solid 2px #111 !important;
+        margin-bottom: 1rem !important;
     }
     
     .party4SubBox {
-        margin-bottom: 10px !important;
+        #margin-bottom: 10px !important;
     }
     
     .racePartyName {
-        font-size: 63px !important;
+        font-size: 50px !important;
         line-height: 63px !important;
         padding-bottom: 10px !important;
     }
+
+    .racePartyNameLong {
+        font-size: 40px !important;
+        line-height: 40px !important;
+        padding-bottom: 10px !important;
+    }
+    
+    .raceboardImgCong {
+        width: 6rem !important;
+        height: 6rem !important;
+    }
+    
+    .raceCheckCong {
+        margin-left: -0.1rem !important;
+        width: 38px !important;
+        height: 38px !important;
+    }
+    
+    .raceboardWinnerCong {
+        font-size: 2rem !important;
+    }
+    
+    .raceboardWinnerImgBox {
+        width: 25% !important;
+    }
     
     .raceName {
-        height: 260px !important;        
+        height: 135px !important;        
         font-size: 44px;
     }
     
     .raceTitle {
         font-size: 25px !important;
-        margin-bottom: 20px !important;
+        margin-bottom: 13px !important;
+        margin-top: 0.6rem;
     }
     
     .raceCandBox {
@@ -382,7 +417,13 @@ body {
     }  
     
     .percentNum {
-        font-size: 170px !important;
+        font-size: 9rem !important;
+        margin-top: 2.2rem !important;
+    }
+    
+    .percentNumCong {
+        font-size: 9rem !important;
+        margin-top: -2rem !important;
     }
     
     .percent {
@@ -390,9 +431,30 @@ body {
     }
     
     .voteNum {
-        font-size: 45px !important;
-        margin-top: -35px !important;
+        font-size: 2.2rem !important;
+        margin-top: -3.5rem !important;
         margin-right: 55px !important;
+    }
+    
+    .raceChart {
+        width: calc(100% - 7.5% - 1000px - 2.4%) !important;
+        bottom: 5rem !important;
+    }
+
+    .raceChartTitle {
+        font-size: 3rem !important;
+    }
+    
+    .raceChartParty {
+        font-size: 2.4rem !important;
+    }
+    
+    .raceChartNum {
+        font-size: 3rem !important;
+    }
+    
+    .raceChartBar {
+        margin-bottom: 1rem !important;
     }
 
     .mapboxgl-popup-content {
@@ -402,8 +464,8 @@ body {
         background-color: white;
         border: solid 1px #fff;
         padding-bottom: 0.3rem;
-        border-bottom-left-radius: 10px 10px;
-        border-bottom-right-radius: 10px 10px;
+        border-bottom-left-radius: 3px 3px;
+        border-bottom-right-radius: 3px 3px;
     }
     
     .topBar {
@@ -411,8 +473,8 @@ body {
     }
     
     .topLogo {
-        height: 212px !important;
-        max-width: 368px !important;
+        #height: 212px !important;
+        #max-width: 368px !important;
     }
     
     .yearText {

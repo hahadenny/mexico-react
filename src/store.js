@@ -25,7 +25,7 @@ const reducer = combineReducers({
   forceDis: forceDisReducer,
   voteCircle: voteCircleReducer,
   turnout: turnoutReducer,
-  margin: marginReducer,
+  margin: marginReducer
 });
 
 const rootReducer = (state, action) => {

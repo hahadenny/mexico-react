@@ -4,16 +4,19 @@ const initialState = {
     openModal: false,    
     showBookmarks: false,  
     showRaceboard: false,
+    showRaceChart: false,
     showTelestrator: false,
     telestratorStroke: 4,
     telestratorColor: 'red',
     showColorPicker: false,
+    reverse: false,
     raceboard: {
         layer: '',
         state: '',
         mun: '',
         munId: '',
         totalVote: '',
+        turnoutPercent: '',
         p1Party: '',
         p1Name: '',
         //p1Title: '',
@@ -57,6 +60,9 @@ export const app = createSlice({
         setShowRaceboard: (state, {payload}) => {
             state.showRaceboard = payload;
         },
+        setShowRaceChart: (state, {payload}) => {
+            state.showRaceChart = payload;
+        },
         setShowTelestrator: (state, {payload}) => {
             state.showTelestrator = payload;
         },
@@ -68,6 +74,9 @@ export const app = createSlice({
         },
         setShowColorPicker: (state, {payload}) => {
             state.showColorPicker = payload;
+        },
+        setReverse: (state, {payload}) => {
+            state.reverse = payload;
         },
         setRaceboard: (state, {payload}) => {
             for (const [key, value] of Object.entries(payload)) {
@@ -90,7 +99,10 @@ export const app = createSlice({
         },
         setRaceTotalVote: (state, {payload}) => {
             state.raceboard.totalVote = payload;
-        },        
+        },     
+        setRaceTurnoutPercent: (state, {payload}) => {
+            state.raceboard.turnoutPercent = payload;
+        },  
         setRaceParty: (state, {payload}) => {
             state.raceboard['p'+payload.i+'Party'] = payload.payload;
         },
@@ -116,7 +128,9 @@ export const {
     setOpenModal,
     setShowBookmarks,   
     setShowRaceboard,
+    setShowRaceChart,
     setShowTelestrator,
+    setReverse,
     setTelestratorStroke,
     setTelestratorColor,
     setShowColorPicker,
@@ -128,9 +142,10 @@ export const {
     setRaceParty,
     setRaceColor,
     setRaceName,
-    setRaceTitle,
-    setRaceVote,
+    setRaceTitle,    
     setRaceTotalVote,
+    setRaceTurnoutPercent,
+    setRaceVote,
     setRacePercent,
 } = app.actions;
 export default app.reducer;

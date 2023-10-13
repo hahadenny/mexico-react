@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Navbar, ScrollArea, createStyles, rem } from "@mantine/core";
 import {
   /*IconList,
@@ -17,6 +17,10 @@ import {
 import { LinksGroup } from "./NavbarLinksGroup";
 import { DefaultLng, DefaultLat, DefaultZoom } from "../mapbox/settings";
 import {FormattedMessage} from 'react-intl';
+import {
+  setShowRaceboard,
+} from "../redux/app/slice";
+import { appSelector } from "../redux/app/selectors";
 
 const menuData = [
   {
@@ -86,14 +90,24 @@ const menuData = [
     //icon: IconChartTreemap,
     toggle: true
   },  
-  {
+  /*{
     label: <FormattedMessage id={'Settings'} />,
     key: 'Settings',
     //icon: IconSettings
+  },*/
+  {
+    label: 'Race Chart',
+    key: 'RaceChart',
+    toggle: true
   },
   {
     label: 'Telestrator',
     key: 'Telestrator',
+    toggle: true
+  },
+  {
+    label: 'Reverse',
+    key: 'Reverse',
     toggle: true
   },
   {
@@ -145,9 +159,12 @@ const useStyles = createStyles((theme) => ({
   }
 }));
 
-export default function NavbarNested({mapRef, markerRef, popupRef, canvasRef, addFilter}) {
+export default function NavbarNested({mapRef, markerRef, popupRef, canvasRef, addFilter, removeFilter}) {
   const { classes } = useStyles();
   const raceType = useSelector((state) => state.raceType.value);
+  const dispatch = useDispatch();
+  
+  const app = useSelector(appSelector);
 
   const links = menuData.map((item) =>
     item.key === "ForceDistricts" && raceType !== "cong" ? undefined : (
@@ -172,14 +189,16 @@ export default function NavbarNested({mapRef, markerRef, popupRef, canvasRef, ad
         duration: 3000, // Animate over 3 seconds
         essential: true // This animation is considered essential with respect to prefers-reduced-motion
     });
-  }, [mapRef]);
+    dispatch(setShowRaceboard(false));
+    removeFilter();
+  }, [mapRef, dispatch, removeFilter]);
   
   let homeIconSize = '1.2rem';
   //if (window.screen.availWidth > 3000)
     //homeIconSize = '2.4rem';
 
   return (
-    <Navbar width={{ sm: 250 }} p="sm" className={classes.navbar}>
+    <Navbar width={{ sm: 250 }} p="sm" className={classes.navbar} sx={{ right: app.reverse ? '0px' : 'auto', left: app.reverse ? 'auto' : '0px' }}>
       <Navbar.Section className={classes.header}></Navbar.Section>
 
       <Navbar.Section grow className={classes.links} component={ScrollArea}>

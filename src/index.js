@@ -44,6 +44,7 @@ root.render(
         <BrowserRouter>          
           <MantineProvider
               theme={{
+                fontFamily: "'Libre Franklin', sans-serif",
                 // Override any other properties from default theme
                 spacing: {
                   xs: "1rem",

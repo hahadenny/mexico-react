@@ -40,8 +40,10 @@ import AuthorizedComponent from "./components/AuthorizedComponent";
 import BookmarksListing from "./components/Widgets/Bookmarks/Listing/BookmarksListing";
 import CreateBookmarkModal from "./components/Widgets/Bookmarks/Create/CreateBookmarkModal";
 import Raceboard from "./components/Widgets/Raceboard/Raceboard";
+import RaceboardCong from "./components/Widgets/Raceboard/RaceboardCong";
 import TopBar from "./components/Widgets/TopBar/TopBar";
 import Telestrator from "./components/Widgets/Telestrator/Telestrator";
+import RaceChart from "./components/Widgets/RaceChart/RaceChart";
 import { appSelector, getOpenModal } from "./redux/app/selectors";
 import {
   setOpenModal,
@@ -55,6 +57,7 @@ import {
   setRaceName,
   //setRaceTitle,
   setRaceTotalVote,
+  setRaceTurnoutPercent,
   setRaceVote,
   setRacePercent
 } from "./redux/app/slice";
@@ -73,7 +76,7 @@ const Home = () => {
   const stateSourceId = useRef(null);
   const stateLayerId = useRef(null);
   const stateOlSourceId = useRef(null);
-  const stateOlLayerId = useRef(null);  
+  const stateOlLayerId = useRef(null);
   const disSourceId = useRef(null);
   const disLayerId = useRef(null);
   const munSourceId = useRef(null);
@@ -153,7 +156,6 @@ const Home = () => {
           setRaceState(voca.titleCase(e.features[0].properties.STATE_NAME))
         );
       } else if (e.features[0].sourceLayer === "districts") {
-        dispatch(setRaceState(""));
         dispatch(
           setRaceMun(voca.titleCase(e.features[0].properties.DISTRICT_DISPLAY))
         );
@@ -173,7 +175,8 @@ const Home = () => {
         : "";
       dispatch(setRaceParty({ payload: first_party, i: 1 }));
       //dispatch(setRaceColor({payload: PartyColors[e.features[0].properties.FIRST_PARTY]?.high, i: 1}));
-      const p1Name = e.features[0].properties.FIRST
+      const p1Name = e.features[0].properties.ELECTED_CANDIDATE ? e.features[0].properties.ELECTED_CANDIDATE 
+        : e.features[0].properties.FIRST
         ? e.features[0].properties.FIRST
         : e.features[0].properties.FIRST_DISPLAY
         ? e.features[0].properties.FIRST_DISPLAY
@@ -185,6 +188,11 @@ const Home = () => {
       if (typeof e.features[0].properties.TOTAL_VOTOS !== "undefined")
         total_votes = e.features[0].properties.TOTAL_VOTOS;
       dispatch(setRaceTotalVote(total_votes));
+
+      let turnout_percent = "";
+      if (typeof e.features[0].properties.TURNOUT !== "undefined")
+        turnout_percent = e.features[0].properties.TURNOUT;
+      dispatch(setRaceTurnoutPercent(turnout_percent));
 
       let first_votes = "";
       if (typeof e.features[0].properties.FIRST_votes !== "undefined")
@@ -351,34 +359,47 @@ const Home = () => {
         winner_msg = voca.titleCase(e.features[0].properties.NOMBRE_ESTADO);
       else if (e.features[0].properties.STATE_NAME)
         winner_msg = voca.titleCase(e.features[0].properties.STATE_NAME);
-      popup_txt += `<div class="mapPopupTitle" style="background-color: ${markerColor}">${winner_msg.toUpperCase()}</div>`;
+      popup_txt += `<div class="mapPopupTitle" style="background-color:#fff;color:#000;">${winner_msg}</div>`;
       popup_txt += '<div class="mapPopupLocation">';
       if (e.features[0].sourceLayer === "states") {
-        if (e.features[0].properties.ESTADO)
+        /*if (e.features[0].properties.ESTADO)
           popup_txt += voca.titleCase(e.features[0].properties.ESTADO);
         else if (e.features[0].properties.NOMBRE_ESTADO)
           popup_txt += voca.titleCase(e.features[0].properties.NOMBRE_ESTADO);
-        else 
-          popup_txt += voca.titleCase(e.features[0].properties.STATE_NAME);
+        else popup_txt += voca.titleCase(e.features[0].properties.STATE_NAME);
+        */
       } else {
-        popup_txt += voca.titleCase(e.features[0].properties.MUNICIPIO);
+        if (typeof e.features[0].properties.DISTRICT_DISPLAY !== "undefined")
+          popup_txt += voca.titleCase(
+            e.features[0].properties.DISTRICT_DISPLAY
+          );
+        else popup_txt += voca.titleCase(e.features[0].properties.MUNICIPIO);
       }
       popup_txt += "</div>";
-      popup_txt += `<div class="mapPopupParty" style="color: ${markerColor}">${first_party}</div>`;
+      popup_txt += `<div class="mapPopupParty" style="background-color: ${markerColor};color:#fff;">${first_party}</div>`;
 
       if (e.features[0].properties.TOTAL_VOTOS) {
         const vote_msg = intl.formatMessage(
           { id: "Votes" },
           {
-            votes: e.features[0].properties.TOTAL_VOTOS.toLocaleString(intl.locale)
+            votes: e.features[0].properties.TOTAL_VOTOS.toLocaleString(
+              intl.locale
+            )
           }
         );
-        popup_txt += '<div class="mapPopupVotes">' + vote_msg + "</div>";
+        popup_txt += '<div class="mapPopupVotes">' + vote_msg;
+        if (
+          e.features[0].sourceLayer === "states" &&
+          typeof e.features[0].properties.TURNOUT !== "undefined"
+        )
+          popup_txt +=
+            " - " + Math.round(e.features[0].properties.TURNOUT) + "% Turnout";
+        popup_txt += "</div>";
       }
 
       popup_txt += "</div>";
 
-      if (!["states", "districts"].includes(e.features[0].sourceLayer)) {
+      if (1 || !["districts"].includes(e.features[0].sourceLayer)) {
         popup.current = new mapboxgl.Popup({ offset: 40 })
           .setLngLat([e.lngLat.lng, e.lngLat.lat])
           .setHTML(popup_txt)
@@ -475,6 +496,15 @@ const Home = () => {
         ["==", ["get", "NOMBRE_ESTADO"], stateName2],
         ["==", ["get", "ESTADO"], stateName2]
       ]);
+
+      // delay hide by 0.5s
+      setTimeout(() => {
+        map.current.setLayoutProperty(
+          stateLayerId.current,
+          "visibility",
+          "none"
+        );
+      }, 500);
     }
   };
 
@@ -489,6 +519,11 @@ const Home = () => {
 
     if (map.current.getLayer(stateLayerId.current)) {
       map.current.setFilter(stateLayerId.current, null);
+      map.current.setLayoutProperty(
+        stateLayerId.current,
+        "visibility",
+        "visible"
+      );
     }
   };
 
@@ -503,8 +538,6 @@ const Home = () => {
         map.current.off("click", disLayerId.current, selectLocation);
         map.current.removeLayer(disLayerId.current);
       }
-
-      
 
       if (map.current.getLayer(stateLayerId.current)) {
         map.current.off("click", stateLayerId.current, selectLocation);
@@ -553,6 +586,7 @@ const Home = () => {
       map.current.addLayer(vectorLayerOutline, firstLayerId.current);
 
       map.current.on("click", vectorLayerOutline.id, selectLocation);
+
       map.current.on("mouseenter", vectorLayerOutline.id, () => {
         map.current.getCanvas().style.cursor = "pointer";
       });
@@ -853,13 +887,21 @@ const Home = () => {
       padding={0}
       layout="alt"
       navbar={
-        <Navbar width={{ base: 300 }} sx={{ backgroundColor: "transparent" }}>
+        <Navbar
+          width={{ base: 300 }}
+          sx={{
+            backgroundColor: "transparent",
+            right: app.reverse ? "0px" : "auto",
+            left: app.reverse ? "auto" : "0px"
+          }}
+        >
           <NavbarNested
             mapRef={map}
             markerRef={marker}
             popupRef={popup}
             canvasRef={canvas}
             addFilter={addFilter}
+            removeFilter={removeFilter}
           />
         </Navbar>
       }
@@ -898,11 +940,17 @@ const Home = () => {
         onClose={onCloseModal}
       />
       <Raceboard
-        open={app.showRaceboard}
+        open={app.showRaceboard && !(raceType === "cong")}
+        onClose={onCloseRaceboard}
+        app={app}
+      />
+      <RaceboardCong
+        open={app.showRaceboard && raceType === "cong"}
         onClose={onCloseRaceboard}
         app={app}
       />
       <Telestrator innerRef={canvas} />
+      <RaceChart />
     </AppShell>
   );
 };

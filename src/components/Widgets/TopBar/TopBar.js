@@ -1,5 +1,5 @@
 import { Box, Text } from "@mantine/core";
-import mx_logo from "../../../assets/img/mx_logo.png";
+import mx_logo from "../../../assets/img/mexico24.png";
 import { useSelector } from "react-redux";
 import { FormattedMessage } from "react-intl";
 
@@ -28,12 +28,12 @@ const TopBar = () => {
         //maxHeight: "10%"
       }}
     >
-      <Box style={{ backgroundColor: "#D0CCCB" }}>
+      <Box style={{ backgroundColor: "#ffffff", width: '7.5%' }}>
         <img
           className={"topLogo"}
-          style={{ height: "100%", maxWidth: "171px" }}
+          style={{ height: "100%", maxWidth: "100%" }}
           src={mx_logo}
-          alt="MX Election 2023"
+          alt="MX Election 2024"
         />
       </Box>
       <Box
@@ -47,9 +47,9 @@ const TopBar = () => {
         <Text
           className={"topTitleText"}
           sx={{
-            marginLeft: "1%",
+            marginLeft: "2%",
             fontWeight: "bold",
-            fontSize: "4rem",
+            fontSize: "4.1rem",
             whiteSpace: "nowrap"
           }}
         >

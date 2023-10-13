@@ -8,7 +8,7 @@ import React, {
     useState
 } from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import voca from "voca";
+//import voca from "voca";
 //import {userSelector} from "../../../../redux/auth/selectors";
 import TableGrid from "../../../Grid/TableGrid";
 import useBookmarksTableGrid from '../../../../hooks/bookmarks/useBookmarksTableGrid';
@@ -125,19 +125,15 @@ const MenuBookmarksListing = ({mapRef, markerRef, popupRef, addFilter}) => {
             let winner_msg = intl.formatMessage({ id: "WinnerPopup" });
             if (data['raceboard']['state'])
                 winner_msg = data['raceboard']['state'];
-            popup_txt += `<div class="mapPopupTitle" style="background-color: ${markerColor}">${winner_msg.toUpperCase()}</div>`;
+            popup_txt += `<div class="mapPopupTitle" style="background-color:#fff;color:#000;">${winner_msg}</div>`;
             popup_txt += '<div class="mapPopupLocation">';
             if (data['raceboard']['mun']) {
               popup_txt += (data['raceboard']['mun'] ? data['raceboard']['mun'] : '')+'<!--<br><span>(Municipal ID: '+data['raceboard']['munId']+')</span>-->'; 
-              if (data['raceType'] === 'cong') {
-                if (data['raceboard']['state'])
-                  popup_txt += "<br>" + voca.titleCase(data['raceboard']['state']);
-              }
             }              
-            else
-              popup_txt += data['raceboard']['state'];          
+            //else
+              //popup_txt += data['raceboard']['state'];          
             popup_txt += "</div>";
-            popup_txt += `<div class="mapPopupParty" style="color: ${markerColor}">${data['raceboard']['p1Party']}</div>`;
+            popup_txt += `<div class="mapPopupParty" style="background-color: ${markerColor};color:#fff;">${data['raceboard']['p1Party']}</div>`;
               
             /*popup_txt += '<br><span style="color:'+PartyColors[data['raceboard']['p1Party']]?.high+';">';
             if (['Tie', 'No cómputo'].includes(data['raceboard']['p1Party'])) {
@@ -152,12 +148,15 @@ const MenuBookmarksListing = ({mapRef, markerRef, popupRef, addFilter}) => {
           
             if (data['raceboard']['totalVote']) {
               const vote_msg = intl.formatMessage({id: 'Votes'}, {votes: data['raceboard']['totalVote'].toLocaleString(intl.locale)});
-              popup_txt += '<div class="mapPopupVotes">' + vote_msg + "</div>";
+              popup_txt += '<div class="mapPopupVotes">' + vote_msg;
+              if (data['raceboard']['layer'] === 'states' && data['raceboard']['turnoutPercent'])
+                popup_txt += ' - ' + Math.round(data['raceboard']['turnoutPercent']) + '% Turnout';
+              popup_txt += "</div>";
             }
             
             popup_txt += '</div>';
             
-            if (!['states', 'districts'].includes(data['raceboard']['layer'])) {
+            if (1 || !['districts'].includes(data['raceboard']['layer'])) {
                 popupRef.current = new mapboxgl.Popup({offset: 40})
                     .setLngLat([data['markerLng'], data['markerLat']])
                     .setHTML(popup_txt)

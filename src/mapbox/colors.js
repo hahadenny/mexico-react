@@ -28,6 +28,7 @@ export const PartyColors = {
   "PRD-PT": { low: "#fff9dd", mid: "#ffee99", high: "#feda1d" },
   "PRD-PT-MC": { low: "#fff9dd", mid: "#ffee99", high: "#feda1d" },
   "PRD-PT-CONVERGENCIA": { low: "#fff9dd", mid: "#ffee99", high: "#feda1d" },
+  ASDC: { low: "#ffffff", mid: "#bebebe", high: "#7c7d7d" },
   "MORENA-PT-PES": {
     low2018: "#dbc6c6",
     low: "#ecdcdc",
@@ -40,7 +41,16 @@ export const PartyColors = {
     mid: "#c69596",
     high: "#801517"
   },
-  Independiente: { low: "#ffffff", mid: "#bebebe", high: "#7c7d7d" }
+  PSD: { low: "#ffffff", mid: "#bebebe", high: "#7c7d7d" },
+  Independiente: {
+    low: "#ffffff",
+    mid: "#bebebe",
+    high: "#7c7d7d",
+    low2018: "#E3DEE6",
+    mid2018: "#937FA0",
+    high2018: "#422059"
+  },
+  OTHER: { low: "#ffffff", mid: "#bebebe", high: "#7c7d7d" },
 };
 
 export const GeneralFillColors = {
@@ -641,11 +651,26 @@ export const MarginFillColors = (year) => {
       [
         "step",
         ["to-number", ["get", "MARGIN"], 0],
-        ["to-color", PartyColors.Independiente.low],
+        [
+          "to-color",
+          year === 2018
+            ? PartyColors.Independiente.low2018
+            : PartyColors.Independiente.low
+        ],
         15,
-        ["to-color", PartyColors.Independiente.mid],
+        [
+          "to-color",
+          year === 2018
+            ? PartyColors.Independiente.mid2018
+            : PartyColors.Independiente.mid
+        ],
         35,
-        ["to-color", PartyColors.Independiente.high]
+        [
+          "to-color",
+          year === 2018
+            ? PartyColors.Independiente.high2018
+            : PartyColors.Independiente.high
+        ]
       ]
     ],
     cong: [
@@ -867,11 +892,26 @@ export const MarginFillColors = (year) => {
       [
         "step",
         ["to-number", ["get", "MARGIN"], 0],
-        ["to-color", PartyColors.Independiente.low],
+        [
+          "to-color",
+          year === 2018
+            ? PartyColors.Independiente.low2018
+            : PartyColors.Independiente.low
+        ],
         15,
-        ["to-color", PartyColors.Independiente.mid],
+        [
+          "to-color",
+          year === 2018
+            ? PartyColors.Independiente.mid2018
+            : PartyColors.Independiente.mid
+        ],
         35,
-        ["to-color", PartyColors.Independiente.high]
+        [
+          "to-color",
+          year === 2018
+            ? PartyColors.Independiente.high2018
+            : PartyColors.Independiente.high
+        ]
       ]
     ]
   };

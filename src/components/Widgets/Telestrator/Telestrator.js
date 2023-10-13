@@ -9,7 +9,8 @@ const Telestrator = ({innerRef}) => {
     //border: '0.0625rem solid #9c9c9c',
     zIndex: '999',
     position: 'absolute',
-    left: '7.5%',
+    left: app.reverse ? 'auto' : '7.5%',
+    right: app.reverse ? '7.5%' : 'auto',
     top: '0px',
     display: app.showTelestrator ? 'block' : 'none'
   };

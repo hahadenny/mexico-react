@@ -27,7 +27,9 @@ import {
   setOpenModal,
   setShowBookmarks,
   setShowRaceboard,
-  setShowTelestrator
+  setShowRaceChart,
+  setShowTelestrator,
+  setReverse
 } from "../redux/app/slice";
 import { appSelector } from "../redux/app/selectors";
 import { logout } from "../redux/auth/slice";
@@ -327,8 +329,14 @@ export function LinksGroup({
       case "VoteCircles":
         storeVal = voteCircle;
         break;
+      case "RaceChart":
+        storeVal = app.showRaceChart;
+        break;
       case "Telestrator":
         storeVal = app.showTelestrator;
+        break;
+      case "Reverse":
+        storeVal = app.reverse;
         break;
       default:
         break;
@@ -348,8 +356,14 @@ export function LinksGroup({
       case "VoteCircles":
         dispatch(updateVoteCircle(value));
         break;
+      case "RaceChart":
+        dispatch(setShowRaceChart(value));
+        break;
       case "Telestrator":
         dispatch(setShowTelestrator(value));
+        break;
+      case "Reverse":
+        dispatch(setReverse(value));
         break;
       default:
         break;

@@ -1,33 +1,39 @@
 import React from "react";
 import { Dialog, Box, Text } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
-import { useSelector } from "react-redux";
-import { Titles, Names } from "../../../mapbox/titles";
+//import { useSelector } from "react-redux";
+import { Titles /*, Names*/ } from "../../../mapbox/titles";
 import { PartyColors } from "../../../mapbox/colors";
 import CandidateImgs from "../../../mapbox/candidates";
 //import variables from "../../../_variables.scss";
 import { FormattedMessage, useIntl } from "react-intl";
 
-const Raceboard = ({ open, onClose, app }) => {
-  const year = useSelector((state) => state.year.value);
+const RaceboardCong = ({ open, onClose, app }) => {
+  //const year = useSelector((state) => state.year.value);
   const intl = useIntl();
 
-  let checkSize = 20;
+  let checkSize = 17;
   let checkStroke = 3;
-  let partyBorderLeft = 0;
-  let partyBorderBottom = 6;
+  let partyBorderBottom = 8;
   if (window.screen.availWidth > 3000) {
     //checkSize = 60;
     //checkStroke = 3;
-    partyBorderLeft = 0;
     partyBorderBottom = 16;
   }
 
+  let showDistrictWinner = "none";
+  if (app.raceboard.layer === "districts") {
+    showDistrictWinner = "block";
+  }
+
+  const party1_imgs = app.raceboard.p1Party.split("-");
+  const party2_imgs = app.raceboard.p2Party.split("-");
+  const party3_imgs = app.raceboard.p3Party.split("-");
+  const party4_imgs = app.raceboard.p4Party.split("-");
+
   const runAfterRender = () => {
-    if (document.getElementById("raceboardImg1")) {
-      document.getElementById("raceboardCheckBox").style.height =
-        document.getElementById("raceboardImg1").height + "px";
-    }
+    document.getElementById("raceboardCheckBoxCong").style.height =
+      document.getElementById("raceboardRow1Cong").offsetHeight + "px";
   };
 
   return (
@@ -38,7 +44,11 @@ const Raceboard = ({ open, onClose, app }) => {
       withCloseButton
       onClose={onClose}
       radius="unset"
-      position={{ bottom: "0px", left: app.reverse ? '0px' : 'auto', right: app.reverse ? 'auto' : '0px' }}
+      position={{
+        bottom: "0px",
+        left: app.reverse ? "0px" : "auto",
+        right: app.reverse ? "auto" : "0px"
+      }}
       transition="slide-up"
       sx={{
         width: "450px",
@@ -92,17 +102,29 @@ const Raceboard = ({ open, onClose, app }) => {
       <Box
         sx={{ display: "flex", flexDirection: "column", alignItems: "stretch" }}
       >
-        <Box className={"partyBox"} sx={{ display: "flex", flex: 1, backgroundColor:'rgba(255,255,255,0.8)', paddingTop:'0.6rem', marginBottom:'0.5rem' }}>
+        <Box
+          className={"partyBox"}
+          sx={{
+            display: "flex",
+            flex: 1,
+            backgroundColor: "rgba(255,255,255,0.8)",
+            paddingTop: "0.6rem",
+            marginBottom: "0.5rem"
+          }}
+        >
           <Box
-            id={"raceboardCheckBox"}
+            id={"raceboardCheckBoxCong"}
             sx={{
               display: "flex",
               flexDirection: "column",
               margin: "0px 0px 0px 0px",
-              width: "5%",
+              width: "3.5%",
               marginRight: "1%",
-              //backgroundColor: variables.primaryHex,
-              backgroundColor: PartyColors[app.raceboard.p1Party]?.high,
+              backgroundColor:
+                app.raceboard.layer === "districts"
+                  ? PartyColors[app.raceboard.p1Party]?.high
+                  : "transparent",
+              //backgroundColor: "transparent",
               color: "#fff",
               fontWeight: "bold",
               justifyContent: "center",
@@ -110,18 +132,23 @@ const Raceboard = ({ open, onClose, app }) => {
             }}
           >
             <IconCheck
-              className={"raceCheck"}
+              className={"raceCheckCong"}
               strokeWidth={checkStroke}
               size={checkSize}
-              style={{ marginLeft: "0px" }}
+              style={{ marginLeft: "0rem" }}
             />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column", width: "95%" }}>
             <Box
+              id={"raceboardRow1Cong"}
               className={"partySubBox"}
               sx={{
                 display: "flex",
-                borderBottom: "solid " + partyBorderBottom + "px " + PartyColors[app.raceboard.p1Party]?.high,
+                borderBottom:
+                  "solid " +
+                  partyBorderBottom +
+                  "px " +
+                  PartyColors[app.raceboard.p1Party]?.high,
                 marginRight: "4%",
                 paddingBottom: "0rem",
                 marginBottom: "0.5rem"
@@ -132,92 +159,92 @@ const Raceboard = ({ open, onClose, app }) => {
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "top",
-                  width: "26%"
+                  width: "74%"
                 }}
               >
-                <img
-                  id={"raceboardImg1"}
-                  src={
-                    CandidateImgs[
-                      app.raceboard.p1Party?.replaceAll("-", "") + year
-                    ]
-                  }
-                  style={{ width: "100%" }}
-                  alt=""
-                />
-                <Box
-                    className={"raceTitle"}
+                <Box sx={{ display: "flex", width: "100%" }}>
+                  <Box
+                    className={"raceboardWinnerImgBox"}
                     sx={{
-                      marginTop: "0.2rem",
-                      marginBottom: "10px",
-                      fontSize: "12px",
-                      color: "#777",
-                      whiteSpace: "nowrap"
+                      width: "27%",
+                      marginRight: "3%",
+                      display: showDistrictWinner
                     }}
                   >
-                    {Titles[app.raceboard.p1Name]
-                      ? Titles[app.raceboard.p1Name]
-                      : "Candidatura " + app.raceboard.p1Party}
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginLeft: "0.5%",
-                  width: "48%",
-                  marginTop: "0px",
-                  fontWeight: "bold"
-                }}
-              >
-                <Box sx={{ width: "95%" }}>
-                  <div
-                    className={
-                      app.raceboard.p1Party.length > 10
-                        ? "racePartyName"
-                        : "racePartyName"
-                    }
-                    style={{
-                      //backgroundColor: PartyColors[app.raceboard.p1Party]?.high,
-                      color: PartyColors[app.raceboard.p1Party]?.high,
-                      display: "inline-block",
-                      width: "auto",
-                      padding: "2px 7px 3px 6px",
-                      marginLeft: "0px",
-                      whiteSpace: "nowrap",
-                      fontSize:
-                        app.raceboard.p1Party.length > 10 ? "25px" : "25px",
-                      lineHeight:
-                        app.raceboard.p1Party.length > 10 ? "25px" : "25px"
-                    }}
-                  >
-                    {app.raceboard.p1Party}
-                  </div>
+                    <img
+                      id={"raceboardImg1Cong"}
+                      src={CandidateImgs["PRIPVEMPANAL2018"]}
+                      style={{ width: "100%", marginTop: "0.2rem" }}
+                      alt=""
+                    />
+                  </Box>
+                  <Box sx={{ display: "flex", flexDirection: "column" }}>
+                    <Box sx={{ width: "95%" }}>
+                      <div
+                        className={"racePartyName"}
+                        style={{
+                          color: PartyColors[app.raceboard.p1Party]?.high,
+                          display: "inline-block",
+                          width: "auto",
+                          padding: "2px 7px 6px 0px",
+                          marginLeft: "0px",
+                          whiteSpace: "nowrap",
+                          fontSize: "21px",
+                          lineHeight: "25px",
+                          fontWeight: "bold"
+                        }}
+                      >
+                        {app.raceboard.p1Party}
+                      </div>
+                    </Box>
+                    <Box>
+                      {party1_imgs.map((img, index) => {
+                        return (
+                          <img
+                            key={index}
+                            className={"raceboardImgCong"}
+                            src={
+                              CandidateImgs[img]
+                                ? CandidateImgs[img]
+                                : "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                            }
+                            style={{
+                              width: "3rem",
+                              height: "3rem",
+                              marginRight: "0.5rem"
+                            }}
+                            alt=""
+                          />
+                        );
+                      })}
+                    </Box>
+                  </Box>
                 </Box>
                 <Box
-                  className={"raceCandBox"}
+                  className={"raceboardWinnerCong"}
                   sx={{
-                    paddingTop: "15px",
-                    paddingLeft: "5px",
-                    borderLeft:
-                      "solid " +
-                      partyBorderLeft +
-                      "px " +
-                      (PartyColors[app.raceboard.p1Party]
-                        ? PartyColors[app.raceboard.p1Party].high
-                        : "#111111")
+                    fontSize: "0.9rem",
+                    marginTop: "0.4rem",
+                    marginBottom: "0.3rem",
+                    width: "100%",
+                    display: showDistrictWinner
                   }}
                 >
-                  <Box
-                    className={"raceName"}
-                    sx={{ position: "relative", height: "4rem", fontSize: "18px", width: "84%" }}
-                  >
-                    <span style={{position:'absolute', bottom:0}}>
-                    {Names[app.raceboard.p1Name]
-                      ? Names[app.raceboard.p1Name]
-                      : app.raceboard.p1Name}
-                    </span>
-                  </Box>                  
+                  {app.raceboard.p1Name}
+                </Box>
+                <Box
+                  className={"raceTitle"}
+                  sx={{
+                    marginTop: "0.2rem",
+                    marginBottom: "10px",
+                    fontSize: "12px",
+                    color: "#777",
+                    whiteSpace: "nowrap"
+                  }}
+                >
+                  {Titles[app.raceboard.p1Name]
+                    ? Titles[app.raceboard.p1Name]
+                    : "Candidatura " + app.raceboard.p1Party}
                 </Box>
               </Box>
               <Box
@@ -230,7 +257,10 @@ const Raceboard = ({ open, onClose, app }) => {
                   paddingLeft: "3%"
                 }}
               >
-                <Text className={"percentNum"} sx={{ fontSize: "4rem", marginTop: "1rem" }}>
+                <Text
+                  className={"percentNumCong"}
+                  sx={{ fontSize: "4.5rem", marginTop: "-1rem" }}
+                >
                   {(app.raceboard.p1Percent && app.raceboard.p1Percent < 10) ||
                   app.raceboard.p1Percent === 0
                     ? "\u00A0\u00A0"
@@ -248,8 +278,8 @@ const Raceboard = ({ open, onClose, app }) => {
                   className={"voteNum"}
                   sx={{
                     fontSize: "1rem",
-                    marginTop: "-1.6rem",
-                    marginRight: "23px"
+                    marginTop: "-1.8rem",
+                    width: "78%"
                   }}
                 >
                   {(app.raceboard.p1Vote || app.raceboard.p1Vote === 0) && (
@@ -268,13 +298,20 @@ const Raceboard = ({ open, onClose, app }) => {
 
         <Box
           className={"partyBox"}
-          sx={{ display: "flex", flex: 1, marginTop: "2px", backgroundColor:'rgba(255,255,255,0.8)', paddingTop:'0.6rem', marginBottom:'0.5rem' }}
+          sx={{
+            display: "flex",
+            flex: 1,
+            marginTop: "2px",
+            backgroundColor: "rgba(255,255,255,0.8)",
+            paddingTop: "0.6rem",
+            marginBottom: "0.5rem"
+          }}
         >
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
-              width: "6%",
+              width: "4.5%",
               marginRight: "0%"
             }}
           ></Box>
@@ -283,7 +320,11 @@ const Raceboard = ({ open, onClose, app }) => {
               className={"partySubBox"}
               sx={{
                 display: "flex",
-                borderBottom: "solid " + partyBorderBottom + "px " + PartyColors[app.raceboard.p2Party]?.high,
+                borderBottom:
+                  "solid " +
+                  partyBorderBottom +
+                  "px " +
+                  PartyColors[app.raceboard.p2Party]?.high,
                 marginRight: "4%",
                 paddingBottom: "0rem",
                 marginBottom: "0.5rem"
@@ -294,91 +335,61 @@ const Raceboard = ({ open, onClose, app }) => {
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "top",
-                  width: "26%"
-                }}
-              >
-                <img
-                  src={
-                    CandidateImgs[
-                      app.raceboard.p2Party?.replaceAll("-", "") + year
-                    ]
-                  }
-                  style={{ width: "100%" }}
-                  alt=""
-                />
-                <Box
-                    className={"raceTitle"}
-                    sx={{
-                      marginTop: "0.2rem",
-                      marginBottom: "10px",
-                      fontSize: "12px",
-                      color: "#777",
-                      whiteSpace: "nowrap"
-                    }}
-                  >
-                    {Titles[app.raceboard.p2Name]
-                      ? Titles[app.raceboard.p2Name]
-                      : "Candidatura " + app.raceboard.p2Party}
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginLeft: "0.5%",
-                  width: "48%",
-                  marginTop: "0px",
-                  fontWeight: "bold"
+                  width: "74%"
                 }}
               >
                 <Box sx={{ width: "95%" }}>
                   <div
-                    className={
-                      app.raceboard.p2Party.length > 10
-                        ? "racePartyName"
-                        : "racePartyName"
-                    }
+                    className={"racePartyName"}
                     style={{
-                      //backgroundColor: PartyColors[app.raceboard.p2Party]?.high,
                       color: PartyColors[app.raceboard.p2Party]?.high,
                       display: "inline-block",
                       width: "auto",
-                      padding: "2px 7px 3px 6px",
+                      padding: "2px 7px 6px 0px",
                       marginLeft: "0px",
                       whiteSpace: "nowrap",
-                      fontSize:
-                        app.raceboard.p2Party.length > 10 ? "25px" : "25px",
-                      lineHeight:
-                        app.raceboard.p2Party.length > 10 ? "25px" : "25px"
+                      fontSize: "21px",
+                      lineHeight: "25px",
+                      fontWeight: "bold"
                     }}
                   >
                     {app.raceboard.p2Party}
                   </div>
                 </Box>
+                <Box>
+                  {party2_imgs.map((img, index) => {
+                    return (
+                      <img
+                        key={index}
+                        className={"raceboardImgCong"}
+                        src={
+                          CandidateImgs[img]
+                            ? CandidateImgs[img]
+                            : "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                        }
+                        style={{
+                          width: "3rem",
+                          height: "3rem",
+                          marginRight: "0.5rem"
+                        }}
+                        alt=""
+                      />
+                    );
+                  })}
+                </Box>
                 <Box
-                  className={"raceCandBox"}
+                  className={"raceTitle"}
                   sx={{
-                    paddingTop: "15px",
-                    paddingLeft: "5px",
-                    borderLeft:
-                      "solid " +
-                      partyBorderLeft +
-                      "px " +
-                      (PartyColors[app.raceboard.p2Party]
-                        ? PartyColors[app.raceboard.p2Party].high
-                        : "#111111")
+                    marginTop: "0.2rem",
+                    marginBottom: "10px",
+                    fontSize: "12px",
+                    color: "#777",
+                    whiteSpace: "nowrap"
                   }}
                 >
-                  <Box
-                    className={"raceName"}
-                    sx={{ position: "relative", height: "4rem", fontSize: "18px", width: "84%" }}
-                  >
-                    <span style={{position:'absolute', bottom:0}}>
-                    {Names[app.raceboard.p2Name]
-                      ? Names[app.raceboard.p2Name]
-                      : app.raceboard.p2Name}
-                    </span>
-                  </Box>                  
+                  {Titles[app.raceboard.p2Name]
+                    ? Titles[app.raceboard.p2Name]
+                    : "Candidatura " + app.raceboard.p2Party}
                 </Box>
               </Box>
               <Box
@@ -391,7 +402,10 @@ const Raceboard = ({ open, onClose, app }) => {
                   paddingLeft: "3%"
                 }}
               >
-                <Text className={"percentNum"} sx={{ fontSize: "4rem", marginTop: "1rem" }}>
+                <Text
+                  className={"percentNumCong"}
+                  sx={{ fontSize: "4.5rem", marginTop: "-1rem" }}
+                >
                   {(app.raceboard.p2Percent && app.raceboard.p2Percent < 10) ||
                   app.raceboard.p2Percent === 0
                     ? "\u00A0\u00A0"
@@ -409,8 +423,8 @@ const Raceboard = ({ open, onClose, app }) => {
                   className={"voteNum"}
                   sx={{
                     fontSize: "1rem",
-                    marginTop: "-1.6rem",
-                    marginRight: "23px"
+                    marginTop: "-1.8rem",
+                    width: "78%"
                   }}
                 >
                   {(app.raceboard.p2Vote || app.raceboard.p2Vote === 0) && (
@@ -429,13 +443,20 @@ const Raceboard = ({ open, onClose, app }) => {
 
         <Box
           className={"partyBox"}
-          sx={{ display: "flex", flex: 1, marginTop: "2px", backgroundColor:'rgba(255,255,255,0.8)', paddingTop:'0.6rem', marginBottom:'0.5rem' }}
+          sx={{
+            display: "flex",
+            flex: 1,
+            marginTop: "2px",
+            backgroundColor: "rgba(255,255,255,0.8)",
+            paddingTop: "0.6rem",
+            marginBottom: "0.5rem"
+          }}
         >
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
-              width: "6%",
+              width: "4.5%",
               marginRight: "0%"
             }}
           ></Box>
@@ -444,7 +465,11 @@ const Raceboard = ({ open, onClose, app }) => {
               className={"partySubBox"}
               sx={{
                 display: "flex",
-                borderBottom: "solid " + partyBorderBottom + "px " + PartyColors[app.raceboard.p3Party]?.high,
+                borderBottom:
+                  "solid " +
+                  partyBorderBottom +
+                  "px " +
+                  PartyColors[app.raceboard.p3Party]?.high,
                 marginRight: "4%",
                 paddingBottom: "0rem",
                 marginBottom: "0.5rem"
@@ -455,91 +480,61 @@ const Raceboard = ({ open, onClose, app }) => {
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "top",
-                  width: "26%"
-                }}
-              >
-                <img
-                  src={
-                    CandidateImgs[
-                      app.raceboard.p3Party?.replaceAll("-", "") + year
-                    ]
-                  }
-                  style={{ width: "100%" }}
-                  alt=""
-                />
-                <Box
-                    className={"raceTitle"}
-                    sx={{
-                      marginTop: "0.2rem",
-                      marginBottom: "10px",
-                      fontSize: "12px",
-                      color: "#777",
-                      whiteSpace: "nowrap"
-                    }}
-                  >
-                    {Titles[app.raceboard.p3Name]
-                      ? Titles[app.raceboard.p3Name]
-                      : "Candidatura " + app.raceboard.p3Party}
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginLeft: "0.5%",
-                  width: "48%",
-                  marginTop: "0px",
-                  fontWeight: "bold"
+                  width: "74%"
                 }}
               >
                 <Box sx={{ width: "95%" }}>
                   <div
-                    className={
-                      app.raceboard.p3Party.length > 10
-                        ? "racePartyName"
-                        : "racePartyName"
-                    }
+                    className={"racePartyName"}
                     style={{
-                      //backgroundColor: PartyColors[app.raceboard.p3Party]?.high,
                       color: PartyColors[app.raceboard.p3Party]?.high,
                       display: "inline-block",
                       width: "auto",
-                      padding: "2px 7px 3px 6px",
+                      padding: "2px 7px 6px 0px",
                       marginLeft: "0px",
                       whiteSpace: "nowrap",
-                      fontSize:
-                        app.raceboard.p3Party.length > 10 ? "25px" : "25px",
-                      lineHeight:
-                        app.raceboard.p3Party.length > 10 ? "25px" : "25px"
+                      fontSize: "21px",
+                      lineHeight: "25px",
+                      fontWeight: "bold"
                     }}
                   >
                     {app.raceboard.p3Party}
                   </div>
                 </Box>
+                <Box>
+                  {party3_imgs.map((img, index) => {
+                    return (
+                      <img
+                        key={index}
+                        className={"raceboardImgCong"}
+                        src={
+                          CandidateImgs[img]
+                            ? CandidateImgs[img]
+                            : "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                        }
+                        style={{
+                          width: "3rem",
+                          height: "3rem",
+                          marginRight: "0.5rem"
+                        }}
+                        alt=""
+                      />
+                    );
+                  })}
+                </Box>
                 <Box
-                  className={"raceCandBox"}
+                  className={"raceTitle"}
                   sx={{
-                    paddingTop: "15px",
-                    paddingLeft: "5px",
-                    borderLeft:
-                      "solid " +
-                      partyBorderLeft +
-                      "px " +
-                      (PartyColors[app.raceboard.p3Party]
-                        ? PartyColors[app.raceboard.p3Party].high
-                        : "#111111")
+                    marginTop: "0.2rem",
+                    marginBottom: "10px",
+                    fontSize: "12px",
+                    color: "#777",
+                    whiteSpace: "nowrap"
                   }}
                 >
-                  <Box
-                    className={"raceName"}
-                    sx={{ position: "relative", height: "4rem", fontSize: "18px", width: "84%" }}
-                  >
-                    <span style={{position:'absolute', bottom:0}}>
-                    {Names[app.raceboard.p3Name]
-                      ? Names[app.raceboard.p3Name]
-                      : app.raceboard.p3Name}
-                    </span>
-                  </Box>                  
+                  {Titles[app.raceboard.p3Name]
+                    ? Titles[app.raceboard.p3Name]
+                    : "Candidatura " + app.raceboard.p3Party}
                 </Box>
               </Box>
               <Box
@@ -552,7 +547,10 @@ const Raceboard = ({ open, onClose, app }) => {
                   paddingLeft: "3%"
                 }}
               >
-                <Text className={"percentNum"} sx={{ fontSize: "4rem", marginTop: "1rem" }}>
+                <Text
+                  className={"percentNumCong"}
+                  sx={{ fontSize: "4.5rem", marginTop: "-1rem" }}
+                >
                   {(app.raceboard.p3Percent && app.raceboard.p3Percent < 10) ||
                   app.raceboard.p3Percent === 0
                     ? "\u00A0\u00A0"
@@ -570,8 +568,8 @@ const Raceboard = ({ open, onClose, app }) => {
                   className={"voteNum"}
                   sx={{
                     fontSize: "1rem",
-                    marginTop: "-1.6rem",
-                    marginRight: "23px"
+                    marginTop: "-1.8rem",
+                    width: "78%"
                   }}
                 >
                   {(app.raceboard.p3Vote || app.raceboard.p3Vote === 0) && (
@@ -590,13 +588,20 @@ const Raceboard = ({ open, onClose, app }) => {
 
         <Box
           className={"partyBox"}
-          sx={{ display: "flex", flex: 1, marginTop: "2px", backgroundColor:'rgba(255,255,255,0.8)', paddingTop:'0.6rem', marginBottom:'0.5rem' }}
+          sx={{
+            display: "flex",
+            flex: 1,
+            marginTop: "2px",
+            backgroundColor: "rgba(255,255,255,0.8)",
+            paddingTop: "0.6rem",
+            marginBottom: "0.5rem"
+          }}
         >
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
-              width: "6%",
+              width: "4.5%",
               marginRight: "0%"
             }}
           ></Box>
@@ -605,7 +610,11 @@ const Raceboard = ({ open, onClose, app }) => {
               className={"partySubBox party4SubBox"}
               sx={{
                 display: "flex",
-                borderBottom: "solid " + partyBorderBottom + "px " + PartyColors[app.raceboard.p4Party]?.high,
+                borderBottom:
+                  "solid " +
+                  partyBorderBottom +
+                  "px " +
+                  PartyColors[app.raceboard.p4Party]?.high,
                 marginRight: "4%",
                 paddingBottom: "0rem",
                 marginBottom: "0.5rem"
@@ -616,91 +625,61 @@ const Raceboard = ({ open, onClose, app }) => {
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "top",
-                  width: "26%"
-                }}
-              >
-                <img
-                  src={
-                    CandidateImgs[
-                      app.raceboard.p4Party?.replaceAll("-", "") + year
-                    ]
-                  }
-                  style={{ width: "100%" }}
-                  alt=""
-                />
-                <Box
-                    className={"raceTitle"}
-                    sx={{
-                      marginTop: "0.2rem",
-                      marginBottom: "10px",
-                      fontSize: "12px",
-                      color: "#777",
-                      whiteSpace: "nowrap"
-                    }}
-                  >
-                    {Titles[app.raceboard.p4Name]
-                      ? Titles[app.raceboard.p4Name]
-                      : "Candidatura " + app.raceboard.p4Party}
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginLeft: "0.5%",
-                  width: "48%",
-                  marginTop: "0px",
-                  fontWeight: "bold"
+                  width: "74%"
                 }}
               >
                 <Box sx={{ width: "95%" }}>
                   <div
-                    className={
-                      app.raceboard.p4Party.length > 10
-                        ? "racePartyName"
-                        : "racePartyName"
-                    }
+                    className={"racePartyName"}
                     style={{
-                      //backgroundColor: PartyColors[app.raceboard.p4Party]?.high,
                       color: PartyColors[app.raceboard.p4Party]?.high,
                       display: "inline-block",
                       width: "auto",
-                      padding: "2px 7px 3px 6px",
+                      padding: "2px 7px 6px 0px",
                       marginLeft: "0px",
                       whiteSpace: "nowrap",
-                      fontSize:
-                        app.raceboard.p4Party.length > 10 ? "25px" : "25px",
-                      lineHeight:
-                        app.raceboard.p4Party.length > 10 ? "25px" : "25px"
+                      fontSize: "21px",
+                      lineHeight: "25px",
+                      fontWeight: "bold"
                     }}
                   >
                     {app.raceboard.p4Party}
                   </div>
                 </Box>
+                <Box>
+                  {party4_imgs.map((img, index) => {
+                    return (
+                      <img
+                        key={index}
+                        className={"raceboardImgCong"}
+                        src={
+                          CandidateImgs[img]
+                            ? CandidateImgs[img]
+                            : "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                        }
+                        style={{
+                          width: "3rem",
+                          height: "3rem",
+                          marginRight: "0.5rem"
+                        }}
+                        alt=""
+                      />
+                    );
+                  })}
+                </Box>
                 <Box
-                  className={"raceCandBox"}
+                  className={"raceTitle"}
                   sx={{
-                    paddingTop: "15px",
-                    paddingLeft: "5px",
-                    borderLeft:
-                      "solid " +
-                      partyBorderLeft +
-                      "px " +
-                      (PartyColors[app.raceboard.p4Party]
-                        ? PartyColors[app.raceboard.p4Party].high
-                        : "#111111")
+                    marginTop: "0.2rem",
+                    marginBottom: "10px",
+                    fontSize: "12px",
+                    color: "#777",
+                    whiteSpace: "nowrap"
                   }}
                 >
-                  <Box
-                    className={"raceName"}
-                    sx={{ position: "relative", height: "4rem", fontSize: "18px", width: "90%" }}
-                  >
-                    <span style={{position:'absolute', bottom:0}}>
-                    {Names[app.raceboard.p4Name]
-                      ? Names[app.raceboard.p4Name]
-                      : app.raceboard.p4Name}
-                    </span>
-                  </Box>                  
+                  {Titles[app.raceboard.p4Name]
+                    ? Titles[app.raceboard.p4Name]
+                    : "Candidatura " + app.raceboard.p4Party}
                 </Box>
               </Box>
               <Box
@@ -713,7 +692,10 @@ const Raceboard = ({ open, onClose, app }) => {
                   paddingLeft: "3%"
                 }}
               >
-                <Text className={"percentNum"} sx={{ fontSize: "4rem", marginTop: "1rem" }}>
+                <Text
+                  className={"percentNumCong"}
+                  sx={{ fontSize: "4.5rem", marginTop: "-1rem" }}
+                >
                   {(app.raceboard.p4Percent && app.raceboard.p4Percent < 10) ||
                   app.raceboard.p4Percent === 0
                     ? "\u00A0\u00A0"
@@ -731,8 +713,8 @@ const Raceboard = ({ open, onClose, app }) => {
                   className={"voteNum"}
                   sx={{
                     fontSize: "1rem",
-                    marginTop: "-1.6rem",
-                    marginRight: "23px"
+                    marginTop: "-1.8rem",
+                    width: "78%"
                   }}
                 >
                   {(app.raceboard.p4Vote || app.raceboard.p4Vote === 0) && (
@@ -753,4 +735,4 @@ const Raceboard = ({ open, onClose, app }) => {
   );
 };
 
-export default Raceboard;
+export default RaceboardCong;
