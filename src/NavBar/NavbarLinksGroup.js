@@ -27,6 +27,7 @@ import {
   setOpenModal,
   setShowBookmarks,
   setShowRaceboard,
+  setClickedMarker,
   setShowRaceChart,
   setShowTelestrator,
   setReverse
@@ -38,6 +39,7 @@ import { useSignOut } from "react-auth-kit";
 import triangle from "../assets/img/triangle.png";
 import { FormattedMessage } from "react-intl";
 import TelestratorOptions from "../components/Widgets/Telestrator/TelestratorOptions";
+import { ZOOM_DIR_ENUM } from "../enums/zoomDir";
 
 const useStyles = createStyles((theme) => ({
   control: {
@@ -133,7 +135,13 @@ export function LinksGroup({
   markerRef,
   popupRef,
   canvasRef,
-  addFilter
+  addFilter,
+  selectFeature,
+  unselectFeature,
+  zoomAndReveal,
+  hideLayer,
+  showLayer,
+  getParallelFeatures
 }) {
   const { classes /*, theme*/ } = useStyles();
   const hasLinks = Array.isArray(links);
@@ -151,7 +159,9 @@ export function LinksGroup({
   const voteCircle = useSelector((state) => state.voteCircle.value);
   const turnout = useSelector((state) => state.turnout.value);
   const margin = useSelector((state) => state.margin.value);
+  const lastFeature = useSelector((state) => state.feature.value);
   const app = useSelector(appSelector);
+  let [toggleYear, setToggleYear] = useState(true);
 
   const [logOut] = useLogOutMutation();
   const signOut = useSignOut();
@@ -168,15 +178,39 @@ export function LinksGroup({
         }`}
         href={"/"}
         onClick={(event) => {
-          event.preventDefault();
+          event.preventDefault();  
 
-          if (year !== link.year || raceType !== link.raceType)
-            dispatch(setShowRaceboard(false));
+          if (year !== link.year || raceType !== link.raceType) {
+            //dispatch(setShowRaceboard(false));
+            //dispatch(setClickedMarker(false));
+            toggleYear = false;
+          }
+          setToggleYear(!toggleYear);
           dispatch(updateRaceType(link.raceType));
           dispatch(updateYear(link.year));
           dispatch(updateParty(null));
-          dispatch(updateTurnout(false));
-          dispatch(updateMargin(false));
+
+          unselectFeature();
+          
+          setTimeout(() => {            
+            const newFeatures = getParallelFeatures(link.raceType, link.year);
+
+            if (newFeatures.length > 0) {
+              newFeatures[0].sourceLayer = lastFeature.sourceLayer;
+
+              selectFeature(
+                newFeatures,
+                null,
+                null,
+                false,
+                ZOOM_DIR_ENUM.FORWARD,
+                false
+              );
+            }
+          }, 1000);
+
+          // dispatch(updateTurnout(false));
+          // dispatch(updateMargin(false));
         }}
       >
         {link.label}
@@ -202,8 +236,10 @@ export function LinksGroup({
         onClick={(event) => {
           event.preventDefault();
 
-          if (year !== link.year || raceType !== link.raceType)
+          if (year !== link.year || raceType !== link.raceType) {
             dispatch(setShowRaceboard(false));
+            dispatch(setClickedMarker(false));
+          }            
           dispatch(updateRaceType(link.raceType));
           dispatch(updateYear(link.year));
           dispatch(updateParty(partyName));
@@ -232,8 +268,10 @@ export function LinksGroup({
         onClick={(event) => {
           event.preventDefault();
 
-          if (year !== link.year || raceType !== link.raceType)
+          if (year !== link.year || raceType !== link.raceType) {
             dispatch(setShowRaceboard(false));
+            dispatch(setClickedMarker(false));
+          }
           dispatch(updateRaceType(link.raceType));
           dispatch(updateYear(link.year));
           dispatch(updateParty(null));
@@ -258,8 +296,10 @@ export function LinksGroup({
         onClick={(event) => {
           event.preventDefault();
 
-          if (year !== link.year || raceType !== link.raceType)
+          if (year !== link.year || raceType !== link.raceType) {
             dispatch(setShowRaceboard(false));
+            dispatch(setClickedMarker(false));
+          }
           dispatch(updateRaceType(link.raceType));
           dispatch(updateYear(link.year));
           dispatch(updateParty(null));
@@ -284,8 +324,10 @@ export function LinksGroup({
         onClick={(event) => {
           event.preventDefault();
 
-          if (year !== link.year || raceType !== link.raceType)
+          if (year !== link.year || raceType !== link.raceType) {
             dispatch(setShowRaceboard(false));
+            dispatch(setClickedMarker(false));
+          }
           dispatch(updateRaceType(link.raceType));
           dispatch(updateYear(link.year));
           dispatch(updateParty(null));
@@ -300,18 +342,22 @@ export function LinksGroup({
     return (
       <div key={link.key}>
         {yearLink}
-        {year === link.year && raceType === link.raceType
-          ? generalLink
-          : undefined}
-        {year === link.year && raceType === link.raceType
-          ? marginLink
-          : undefined}
-        {year === link.year && raceType === link.raceType
-          ? turnoutLink
-          : undefined}
-        {year === link.year && raceType === link.raceType
-          ? partyLinks
-          : undefined}
+        {toggleYear && (
+        <div>
+          {year === link.year && raceType === link.raceType
+            ? generalLink
+            : undefined}
+          {year === link.year && raceType === link.raceType
+            ? marginLink
+            : undefined}
+          {year === link.year && raceType === link.raceType
+            ? turnoutLink
+            : undefined}
+          {year === link.year && raceType === link.raceType
+            ? partyLinks
+            : undefined}
+        </div>
+        )}
       </div>
     );
   });
@@ -440,6 +486,9 @@ export function LinksGroup({
           markerRef={markerRef}
           popupRef={popupRef}
           addFilter={addFilter}
+          zoomAndReveal={zoomAndReveal}
+          hideLayer={hideLayer}
+          showLayer={showLayer}
         />
       )}
       {itemKey === "Telestrator" && app.showTelestrator && (

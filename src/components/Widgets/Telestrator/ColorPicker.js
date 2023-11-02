@@ -18,14 +18,10 @@ const ColorPicker = ({innerRef}) => {
   }, [dispatch]);
   
   const handleClick = useCallback(() => {
-    console.log(app.showColorPicker);
     dispatch(setShowColorPicker(!app.showColorPicker));
   }, [dispatch, app.showColorPicker]);
   
-  console.log(app.showColorPicker);
-  
   const handleChange = useCallback((color) => {
-    console.log(color.hex);
     dispatch(setTelestratorColor(color.hex));
   }, [dispatch]);
   

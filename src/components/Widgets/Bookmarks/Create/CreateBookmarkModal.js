@@ -8,7 +8,7 @@ import style from '../../../../assets/styles/modal.module.scss';
 import {notifications} from '@mantine/notifications';
 import {IconCheck} from '@tabler/icons-react';
 import {/*useDispatch, */useSelector} from "react-redux";
-import {appSelector, getShowRaceboard} from "../../../../redux/app/selectors";
+import {appSelector, getShowRaceboard, getShowRaceChart, getReverse} from "../../../../redux/app/selectors";
 import variables from "../../../../_variables.scss";
 
 const CreateBookmarkModal = ({mapRef, markerRef, open, onClose}) => {
@@ -23,7 +23,10 @@ const CreateBookmarkModal = ({mapRef, markerRef, open, onClose}) => {
     const voteCircle = useSelector((state) => state.voteCircle.value);
     const turnout = useSelector((state) => state.turnout.value);
     const margin = useSelector((state) => state.margin.value);
+    const feature = useSelector((state) => state.feature.value);
     const showRaceboard = useSelector(getShowRaceboard);
+    const showRaceChart = useSelector(getShowRaceChart);
+    const reverse = useSelector(getReverse);
     const app = useSelector(appSelector);
 
     const formik = useFormik({
@@ -42,12 +45,19 @@ const CreateBookmarkModal = ({mapRef, markerRef, open, onClose}) => {
                 'voteCircle': voteCircle,
                 'turnout': turnout,
                 'margin': margin,
+                'feature': feature,
                 'lng': mapRef.current.getCenter().lng.toFixed(4),
                 'lat': mapRef.current.getCenter().lat.toFixed(4),
                 'zoom': mapRef.current.getZoom().toFixed(2),
                 'bearing': mapRef.current.getBearing().toFixed(4),
                 'pitch': mapRef.current.getPitch().toFixed(4),
                 'showRaceboard': showRaceboard,
+                'showRaceChart': showRaceChart,
+                'reverse': reverse,
+                'clickedMarker': app.clickedMarker,
+                'stateLayerId': app.stateLayerId,
+                'munLayerId': app.munLayerId,
+                'disLayerId': app.disLayerId,
             };
             if (showRaceboard) {
                 data.raceboard = app.raceboard;

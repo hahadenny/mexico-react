@@ -6,11 +6,11 @@ import { Titles, Names } from "../../../mapbox/titles";
 import { PartyColors } from "../../../mapbox/colors";
 import CandidateImgs from "../../../mapbox/candidates";
 //import variables from "../../../_variables.scss";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage/*, useIntl*/ } from "react-intl";
 
 const Raceboard = ({ open, onClose, app }) => {
   const year = useSelector((state) => state.year.value);
-  const intl = useIntl();
+  //const intl = useIntl();
 
   let checkSize = 20;
   let checkStroke = 3;
@@ -24,7 +24,10 @@ const Raceboard = ({ open, onClose, app }) => {
   }
 
   const runAfterRender = () => {
-    if (document.getElementById("raceboardImg1")) {
+    if (
+      document.getElementById("raceboardImg1") &&
+      document.getElementById("raceboardCheckBox")
+    ) {
       document.getElementById("raceboardCheckBox").style.height =
         document.getElementById("raceboardImg1").height + "px";
     }
@@ -38,8 +41,13 @@ const Raceboard = ({ open, onClose, app }) => {
       withCloseButton
       onClose={onClose}
       radius="unset"
-      position={{ bottom: "0px", left: app.reverse ? '0px' : 'auto', right: app.reverse ? 'auto' : '0px' }}
-      transition="slide-up"
+      position={{
+        bottom: "0px",
+        left: app.reverse ? "0px" : "auto",
+        right: app.reverse ? "auto" : "0px"
+      }}
+      transition="slide-left"
+      transitionDuration={20}
       sx={{
         width: "450px",
         height: "calc(100vh - 102px)",
@@ -85,43 +93,69 @@ const Raceboard = ({ open, onClose, app }) => {
             textAlign: "center"
           }}
         >
-          {app.raceboard.mun || app.raceboard.mun}
+          {app.raceboard.mun || app.raceboard.state}
         </Box>
       </Box>
 
       <Box
         sx={{ display: "flex", flexDirection: "column", alignItems: "stretch" }}
       >
-        <Box className={"partyBox"} sx={{ display: "flex", flex: 1, backgroundColor:'rgba(255,255,255,0.8)', paddingTop:'0.6rem', marginBottom:'0.5rem' }}>
-          <Box
-            id={"raceboardCheckBox"}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              margin: "0px 0px 0px 0px",
-              width: "5%",
-              marginRight: "1%",
-              //backgroundColor: variables.primaryHex,
-              backgroundColor: PartyColors[app.raceboard.p1Party]?.high,
-              color: "#fff",
-              fontWeight: "bold",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <IconCheck
-              className={"raceCheck"}
-              strokeWidth={checkStroke}
-              size={checkSize}
-              style={{ marginLeft: "0px" }}
-            />
-          </Box>
-          <Box sx={{ display: "flex", flexDirection: "column", width: "95%" }}>
+        <Box
+          className={"partyBox"}
+          sx={{
+            display: "flex",
+            flex: 1,
+            backgroundColor: "rgba(255,255,255,0.8)",
+            paddingTop: "0.6rem",
+            marginBottom: "0.5rem"
+          }}
+        >
+          {app.raceboard.tie ? (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                width: "6%",
+                marginRight: "0%"
+              }}
+            ></Box>
+          ) : (
+            <Box
+              id={"raceboardCheckBox"}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                margin: "0px 0px 0px 0px",
+                width: "5%",
+                marginRight: "1%",
+                backgroundColor:
+                  !app.raceboard.tie
+                    ? PartyColors[app.raceboard.p1Party]?.high
+                    : "transparent",
+                color: "#fff",
+                fontWeight: "bold",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <IconCheck
+                className={"raceCheck"}
+                strokeWidth={checkStroke}
+                size={checkSize}
+                style={{ marginLeft: "0px", display: !app.raceboard.tie ? "block" : "none" }}
+              />
+            </Box>
+          )}
+          <Box sx={{ display: "flex", flexDirection: "column", width: "94%" }}>
             <Box
               className={"partySubBox"}
               sx={{
                 display: "flex",
-                borderBottom: "solid " + partyBorderBottom + "px " + PartyColors[app.raceboard.p1Party]?.high,
+                borderBottom:
+                  "solid " +
+                  partyBorderBottom +
+                  "px " +
+                  PartyColors[app.raceboard.p1Party]?.high,
                 marginRight: "4%",
                 paddingBottom: "0rem",
                 marginBottom: "0.5rem"
@@ -146,18 +180,18 @@ const Raceboard = ({ open, onClose, app }) => {
                   alt=""
                 />
                 <Box
-                    className={"raceTitle"}
-                    sx={{
-                      marginTop: "0.2rem",
-                      marginBottom: "10px",
-                      fontSize: "12px",
-                      color: "#777",
-                      whiteSpace: "nowrap"
-                    }}
-                  >
-                    {Titles[app.raceboard.p1Name]
-                      ? Titles[app.raceboard.p1Name]
-                      : "Candidatura " + app.raceboard.p1Party}
+                  className={"raceTitle"}
+                  sx={{
+                    marginTop: "0.2rem",
+                    marginBottom: "10px",
+                    fontSize: "12px",
+                    color: "#777",
+                    whiteSpace: "nowrap"
+                  }}
+                >
+                  {Titles[app.raceboard.p1Name + year]
+                    ? Titles[app.raceboard.p1Name + year]
+                    : "Candidatura " + app.raceboard.p1Party}
                 </Box>
               </Box>
               <Box
@@ -165,7 +199,7 @@ const Raceboard = ({ open, onClose, app }) => {
                   display: "flex",
                   flexDirection: "column",
                   marginLeft: "0.5%",
-                  width: "48%",
+                  width: "37%",
                   marginTop: "0px",
                   fontWeight: "bold"
                 }}
@@ -179,16 +213,18 @@ const Raceboard = ({ open, onClose, app }) => {
                     }
                     style={{
                       //backgroundColor: PartyColors[app.raceboard.p1Party]?.high,
-                      color: PartyColors[app.raceboard.p1Party]?.high,
+                      color:
+                        PartyColors[app.raceboard.p1Party]?.boardText ||
+                        PartyColors[app.raceboard.p1Party]?.high,
                       display: "inline-block",
                       width: "auto",
                       padding: "2px 7px 3px 6px",
                       marginLeft: "0px",
                       whiteSpace: "nowrap",
                       fontSize:
-                        app.raceboard.p1Party.length > 10 ? "25px" : "25px",
+                        app.raceboard.p1Party.length > 10 ? "24px" : "24px",
                       lineHeight:
-                        app.raceboard.p1Party.length > 10 ? "25px" : "25px"
+                        app.raceboard.p1Party.length > 10 ? "24px" : "24px"
                     }}
                   >
                     {app.raceboard.p1Party}
@@ -210,14 +246,19 @@ const Raceboard = ({ open, onClose, app }) => {
                 >
                   <Box
                     className={"raceName"}
-                    sx={{ position: "relative", height: "4rem", fontSize: "18px", width: "84%" }}
+                    sx={{
+                      position: "relative",
+                      height: "4rem",
+                      fontSize: "1rem",
+                      width: "98%"
+                    }}
                   >
-                    <span style={{position:'absolute', bottom:0}}>
-                    {Names[app.raceboard.p1Name]
-                      ? Names[app.raceboard.p1Name]
-                      : app.raceboard.p1Name}
+                    <span style={{ position: "absolute", bottom: 0 }}>
+                      {Names[app.raceboard.p1Name]
+                        ? Names[app.raceboard.p1Name]
+                        : app.raceboard.p1Name}
                     </span>
-                  </Box>                  
+                  </Box>
                 </Box>
               </Box>
               <Box
@@ -230,7 +271,10 @@ const Raceboard = ({ open, onClose, app }) => {
                   paddingLeft: "3%"
                 }}
               >
-                <Text className={"percentNum"} sx={{ fontSize: "4rem", marginTop: "1rem" }}>
+                <Text
+                  className={"percentNum"}
+                  sx={{ fontSize: "4rem", marginTop: "1rem" }}
+                >
                   {(app.raceboard.p1Percent && app.raceboard.p1Percent < 10) ||
                   app.raceboard.p1Percent === 0
                     ? "\u00A0\u00A0"
@@ -256,7 +300,7 @@ const Raceboard = ({ open, onClose, app }) => {
                     <FormattedMessage
                       id={"Votes2"}
                       values={{
-                        votes: app.raceboard.p1Vote.toLocaleString(intl.locale)
+                        votes: app.raceboard.p1Vote.toLocaleString('en')
                       }}
                     />
                   )}
@@ -268,7 +312,14 @@ const Raceboard = ({ open, onClose, app }) => {
 
         <Box
           className={"partyBox"}
-          sx={{ display: "flex", flex: 1, marginTop: "2px", backgroundColor:'rgba(255,255,255,0.8)', paddingTop:'0.6rem', marginBottom:'0.5rem' }}
+          sx={{
+            display: "flex",
+            flex: 1,
+            marginTop: "2px",
+            backgroundColor: "rgba(255,255,255,0.8)",
+            paddingTop: "0.6rem",
+            marginBottom: "0.5rem"
+          }}
         >
           <Box
             sx={{
@@ -278,12 +329,16 @@ const Raceboard = ({ open, onClose, app }) => {
               marginRight: "0%"
             }}
           ></Box>
-          <Box sx={{ display: "flex", flexDirection: "column", width: "95%" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", width: "94%" }}>
             <Box
               className={"partySubBox"}
               sx={{
                 display: "flex",
-                borderBottom: "solid " + partyBorderBottom + "px " + PartyColors[app.raceboard.p2Party]?.high,
+                borderBottom:
+                  "solid " +
+                  partyBorderBottom +
+                  "px " +
+                  PartyColors[app.raceboard.p2Party]?.high,
                 marginRight: "4%",
                 paddingBottom: "0rem",
                 marginBottom: "0.5rem"
@@ -307,18 +362,18 @@ const Raceboard = ({ open, onClose, app }) => {
                   alt=""
                 />
                 <Box
-                    className={"raceTitle"}
-                    sx={{
-                      marginTop: "0.2rem",
-                      marginBottom: "10px",
-                      fontSize: "12px",
-                      color: "#777",
-                      whiteSpace: "nowrap"
-                    }}
-                  >
-                    {Titles[app.raceboard.p2Name]
-                      ? Titles[app.raceboard.p2Name]
-                      : "Candidatura " + app.raceboard.p2Party}
+                  className={"raceTitle"}
+                  sx={{
+                    marginTop: "0.2rem",
+                    marginBottom: "10px",
+                    fontSize: "12px",
+                    color: "#777",
+                    whiteSpace: "nowrap"
+                  }}
+                >
+                  {Titles[app.raceboard.p2Name + year]
+                    ? Titles[app.raceboard.p2Name + year]
+                    : "Candidatura " + app.raceboard.p2Party}
                 </Box>
               </Box>
               <Box
@@ -326,7 +381,7 @@ const Raceboard = ({ open, onClose, app }) => {
                   display: "flex",
                   flexDirection: "column",
                   marginLeft: "0.5%",
-                  width: "48%",
+                  width: "37%",
                   marginTop: "0px",
                   fontWeight: "bold"
                 }}
@@ -340,16 +395,18 @@ const Raceboard = ({ open, onClose, app }) => {
                     }
                     style={{
                       //backgroundColor: PartyColors[app.raceboard.p2Party]?.high,
-                      color: PartyColors[app.raceboard.p2Party]?.high,
+                      color:
+                        PartyColors[app.raceboard.p2Party]?.boardText ||
+                        PartyColors[app.raceboard.p2Party]?.high,
                       display: "inline-block",
                       width: "auto",
                       padding: "2px 7px 3px 6px",
                       marginLeft: "0px",
                       whiteSpace: "nowrap",
                       fontSize:
-                        app.raceboard.p2Party.length > 10 ? "25px" : "25px",
+                        app.raceboard.p2Party.length > 10 ? "24px" : "24px",
                       lineHeight:
-                        app.raceboard.p2Party.length > 10 ? "25px" : "25px"
+                        app.raceboard.p2Party.length > 10 ? "24px" : "24px"
                     }}
                   >
                     {app.raceboard.p2Party}
@@ -371,14 +428,19 @@ const Raceboard = ({ open, onClose, app }) => {
                 >
                   <Box
                     className={"raceName"}
-                    sx={{ position: "relative", height: "4rem", fontSize: "18px", width: "84%" }}
+                    sx={{
+                      position: "relative",
+                      height: "4rem",
+                      fontSize: "1rem",
+                      width: "98%"
+                    }}
                   >
-                    <span style={{position:'absolute', bottom:0}}>
-                    {Names[app.raceboard.p2Name]
-                      ? Names[app.raceboard.p2Name]
-                      : app.raceboard.p2Name}
+                    <span style={{ position: "absolute", bottom: 0 }}>
+                      {Names[app.raceboard.p2Name]
+                        ? Names[app.raceboard.p2Name]
+                        : app.raceboard.p2Name}
                     </span>
-                  </Box>                  
+                  </Box>
                 </Box>
               </Box>
               <Box
@@ -391,7 +453,10 @@ const Raceboard = ({ open, onClose, app }) => {
                   paddingLeft: "3%"
                 }}
               >
-                <Text className={"percentNum"} sx={{ fontSize: "4rem", marginTop: "1rem" }}>
+                <Text
+                  className={"percentNum"}
+                  sx={{ fontSize: "4rem", marginTop: "1rem" }}
+                >
                   {(app.raceboard.p2Percent && app.raceboard.p2Percent < 10) ||
                   app.raceboard.p2Percent === 0
                     ? "\u00A0\u00A0"
@@ -417,7 +482,7 @@ const Raceboard = ({ open, onClose, app }) => {
                     <FormattedMessage
                       id={"Votes2"}
                       values={{
-                        votes: app.raceboard.p2Vote.toLocaleString(intl.locale)
+                        votes: app.raceboard.p2Vote.toLocaleString('en')
                       }}
                     />
                   )}
@@ -429,7 +494,14 @@ const Raceboard = ({ open, onClose, app }) => {
 
         <Box
           className={"partyBox"}
-          sx={{ display: "flex", flex: 1, marginTop: "2px", backgroundColor:'rgba(255,255,255,0.8)', paddingTop:'0.6rem', marginBottom:'0.5rem' }}
+          sx={{
+            display: "flex",
+            flex: 1,
+            marginTop: "2px",
+            backgroundColor: "rgba(255,255,255,0.8)",
+            paddingTop: "0.6rem",
+            marginBottom: "0.5rem"
+          }}
         >
           <Box
             sx={{
@@ -439,12 +511,16 @@ const Raceboard = ({ open, onClose, app }) => {
               marginRight: "0%"
             }}
           ></Box>
-          <Box sx={{ display: "flex", flexDirection: "column", width: "95%" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", width: "94%" }}>
             <Box
               className={"partySubBox"}
               sx={{
                 display: "flex",
-                borderBottom: "solid " + partyBorderBottom + "px " + PartyColors[app.raceboard.p3Party]?.high,
+                borderBottom:
+                  "solid " +
+                  partyBorderBottom +
+                  "px " +
+                  PartyColors[app.raceboard.p3Party]?.high,
                 marginRight: "4%",
                 paddingBottom: "0rem",
                 marginBottom: "0.5rem"
@@ -468,18 +544,18 @@ const Raceboard = ({ open, onClose, app }) => {
                   alt=""
                 />
                 <Box
-                    className={"raceTitle"}
-                    sx={{
-                      marginTop: "0.2rem",
-                      marginBottom: "10px",
-                      fontSize: "12px",
-                      color: "#777",
-                      whiteSpace: "nowrap"
-                    }}
-                  >
-                    {Titles[app.raceboard.p3Name]
-                      ? Titles[app.raceboard.p3Name]
-                      : "Candidatura " + app.raceboard.p3Party}
+                  className={"raceTitle"}
+                  sx={{
+                    marginTop: "0.2rem",
+                    marginBottom: "10px",
+                    fontSize: "12px",
+                    color: "#777",
+                    whiteSpace: "nowrap"
+                  }}
+                >
+                  {Titles[app.raceboard.p3Name + year]
+                    ? Titles[app.raceboard.p3Name + year]
+                    : "Candidatura " + app.raceboard.p3Party}
                 </Box>
               </Box>
               <Box
@@ -487,7 +563,7 @@ const Raceboard = ({ open, onClose, app }) => {
                   display: "flex",
                   flexDirection: "column",
                   marginLeft: "0.5%",
-                  width: "48%",
+                  width: "37%",
                   marginTop: "0px",
                   fontWeight: "bold"
                 }}
@@ -501,16 +577,18 @@ const Raceboard = ({ open, onClose, app }) => {
                     }
                     style={{
                       //backgroundColor: PartyColors[app.raceboard.p3Party]?.high,
-                      color: PartyColors[app.raceboard.p3Party]?.high,
+                      color:
+                        PartyColors[app.raceboard.p3Party]?.boardText ||
+                        PartyColors[app.raceboard.p3Party]?.high,
                       display: "inline-block",
                       width: "auto",
                       padding: "2px 7px 3px 6px",
                       marginLeft: "0px",
                       whiteSpace: "nowrap",
                       fontSize:
-                        app.raceboard.p3Party.length > 10 ? "25px" : "25px",
+                        app.raceboard.p3Party.length > 10 ? "24px" : "24px",
                       lineHeight:
-                        app.raceboard.p3Party.length > 10 ? "25px" : "25px"
+                        app.raceboard.p3Party.length > 10 ? "24px" : "24px"
                     }}
                   >
                     {app.raceboard.p3Party}
@@ -532,14 +610,19 @@ const Raceboard = ({ open, onClose, app }) => {
                 >
                   <Box
                     className={"raceName"}
-                    sx={{ position: "relative", height: "4rem", fontSize: "18px", width: "84%" }}
+                    sx={{
+                      position: "relative",
+                      height: "4rem",
+                      fontSize: "1rem",
+                      width: "98%"
+                    }}
                   >
-                    <span style={{position:'absolute', bottom:0}}>
-                    {Names[app.raceboard.p3Name]
-                      ? Names[app.raceboard.p3Name]
-                      : app.raceboard.p3Name}
+                    <span style={{ position: "absolute", bottom: 0 }}>
+                      {Names[app.raceboard.p3Name]
+                        ? Names[app.raceboard.p3Name]
+                        : app.raceboard.p3Name}
                     </span>
-                  </Box>                  
+                  </Box>
                 </Box>
               </Box>
               <Box
@@ -552,7 +635,10 @@ const Raceboard = ({ open, onClose, app }) => {
                   paddingLeft: "3%"
                 }}
               >
-                <Text className={"percentNum"} sx={{ fontSize: "4rem", marginTop: "1rem" }}>
+                <Text
+                  className={"percentNum"}
+                  sx={{ fontSize: "4rem", marginTop: "1rem" }}
+                >
                   {(app.raceboard.p3Percent && app.raceboard.p3Percent < 10) ||
                   app.raceboard.p3Percent === 0
                     ? "\u00A0\u00A0"
@@ -578,7 +664,7 @@ const Raceboard = ({ open, onClose, app }) => {
                     <FormattedMessage
                       id={"Votes2"}
                       values={{
-                        votes: app.raceboard.p3Vote.toLocaleString(intl.locale)
+                        votes: app.raceboard.p3Vote.toLocaleString('en')
                       }}
                     />
                   )}
@@ -590,7 +676,14 @@ const Raceboard = ({ open, onClose, app }) => {
 
         <Box
           className={"partyBox"}
-          sx={{ display: "flex", flex: 1, marginTop: "2px", backgroundColor:'rgba(255,255,255,0.8)', paddingTop:'0.6rem', marginBottom:'0.5rem' }}
+          sx={{
+            display: "flex",
+            flex: 1,
+            marginTop: "2px",
+            backgroundColor: "rgba(255,255,255,0.8)",
+            paddingTop: "0.6rem",
+            marginBottom: "0.5rem"
+          }}
         >
           <Box
             sx={{
@@ -600,12 +693,16 @@ const Raceboard = ({ open, onClose, app }) => {
               marginRight: "0%"
             }}
           ></Box>
-          <Box sx={{ display: "flex", flexDirection: "column", width: "95%" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", width: "94%" }}>
             <Box
               className={"partySubBox party4SubBox"}
               sx={{
                 display: "flex",
-                borderBottom: "solid " + partyBorderBottom + "px " + PartyColors[app.raceboard.p4Party]?.high,
+                borderBottom:
+                  "solid " +
+                  partyBorderBottom +
+                  "px " +
+                  PartyColors[app.raceboard.p4Party]?.high,
                 marginRight: "4%",
                 paddingBottom: "0rem",
                 marginBottom: "0.5rem"
@@ -629,18 +726,18 @@ const Raceboard = ({ open, onClose, app }) => {
                   alt=""
                 />
                 <Box
-                    className={"raceTitle"}
-                    sx={{
-                      marginTop: "0.2rem",
-                      marginBottom: "10px",
-                      fontSize: "12px",
-                      color: "#777",
-                      whiteSpace: "nowrap"
-                    }}
-                  >
-                    {Titles[app.raceboard.p4Name]
-                      ? Titles[app.raceboard.p4Name]
-                      : "Candidatura " + app.raceboard.p4Party}
+                  className={"raceTitle"}
+                  sx={{
+                    marginTop: "0.2rem",
+                    marginBottom: "10px",
+                    fontSize: "12px",
+                    color: "#777",
+                    whiteSpace: "nowrap"
+                  }}
+                >
+                  {Titles[app.raceboard.p4Name + year]
+                    ? Titles[app.raceboard.p4Name + year]
+                    : "Candidatura " + app.raceboard.p4Party}
                 </Box>
               </Box>
               <Box
@@ -648,7 +745,7 @@ const Raceboard = ({ open, onClose, app }) => {
                   display: "flex",
                   flexDirection: "column",
                   marginLeft: "0.5%",
-                  width: "48%",
+                  width: "37%",
                   marginTop: "0px",
                   fontWeight: "bold"
                 }}
@@ -662,16 +759,18 @@ const Raceboard = ({ open, onClose, app }) => {
                     }
                     style={{
                       //backgroundColor: PartyColors[app.raceboard.p4Party]?.high,
-                      color: PartyColors[app.raceboard.p4Party]?.high,
+                      color:
+                        PartyColors[app.raceboard.p4Party]?.boardText ||
+                        PartyColors[app.raceboard.p4Party]?.high,
                       display: "inline-block",
                       width: "auto",
                       padding: "2px 7px 3px 6px",
                       marginLeft: "0px",
                       whiteSpace: "nowrap",
                       fontSize:
-                        app.raceboard.p4Party.length > 10 ? "25px" : "25px",
+                        app.raceboard.p4Party.length > 10 ? "24px" : "24px",
                       lineHeight:
-                        app.raceboard.p4Party.length > 10 ? "25px" : "25px"
+                        app.raceboard.p4Party.length > 10 ? "24px" : "24px"
                     }}
                   >
                     {app.raceboard.p4Party}
@@ -693,14 +792,19 @@ const Raceboard = ({ open, onClose, app }) => {
                 >
                   <Box
                     className={"raceName"}
-                    sx={{ position: "relative", height: "4rem", fontSize: "18px", width: "90%" }}
+                    sx={{
+                      position: "relative",
+                      height: "4rem",
+                      fontSize: "1rem",
+                      width: "100%"
+                    }}
                   >
-                    <span style={{position:'absolute', bottom:0}}>
-                    {Names[app.raceboard.p4Name]
-                      ? Names[app.raceboard.p4Name]
-                      : app.raceboard.p4Name}
+                    <span style={{ position: "absolute", bottom: 0 }}>
+                      {Names[app.raceboard.p4Name]
+                        ? Names[app.raceboard.p4Name]
+                        : app.raceboard.p4Name}
                     </span>
-                  </Box>                  
+                  </Box>
                 </Box>
               </Box>
               <Box
@@ -713,7 +817,10 @@ const Raceboard = ({ open, onClose, app }) => {
                   paddingLeft: "3%"
                 }}
               >
-                <Text className={"percentNum"} sx={{ fontSize: "4rem", marginTop: "1rem" }}>
+                <Text
+                  className={"percentNum"}
+                  sx={{ fontSize: "4rem", marginTop: "1rem" }}
+                >
                   {(app.raceboard.p4Percent && app.raceboard.p4Percent < 10) ||
                   app.raceboard.p4Percent === 0
                     ? "\u00A0\u00A0"
@@ -739,7 +846,7 @@ const Raceboard = ({ open, onClose, app }) => {
                     <FormattedMessage
                       id={"Votes2"}
                       values={{
-                        votes: app.raceboard.p4Vote.toLocaleString(intl.locale)
+                        votes: app.raceboard.p4Vote.toLocaleString('en')
                       }}
                     />
                   )}

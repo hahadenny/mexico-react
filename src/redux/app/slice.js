@@ -10,6 +10,13 @@ const initialState = {
     telestratorColor: 'red',
     showColorPicker: false,
     reverse: false,
+    clickedMarker: false,
+    stateLayerId: '',
+    munLayerId: '',
+    disLayerId: '',
+    markerLng: -103.1453,
+    markerLat: 23.9005, 
+    reelected: 0,
     raceboard: {
         layer: '',
         state: '',
@@ -17,6 +24,8 @@ const initialState = {
         munId: '',
         totalVote: '',
         turnoutPercent: '',
+        colorFirstPary: false,
+        tie: false,
         p1Party: '',
         p1Name: '',
         //p1Title: '',
@@ -78,6 +87,24 @@ export const app = createSlice({
         setReverse: (state, {payload}) => {
             state.reverse = payload;
         },
+        setClickedMarker: (state, {payload}) => {
+            state.clickedMarker = payload;
+        },
+        setStateLayerId: (state, {payload}) => {
+            state.stateLayerId = payload;
+        },
+        setMunLayerId: (state, {payload}) => {
+            state.munLayerId = payload;
+        },
+        setDisLayerId: (state, {payload}) => {
+            state.disLayerId = payload;
+        },
+        setMarkerLng: (state, {payload}) => {
+            state.markerLng = payload;
+        },
+        setMarkerLat: (state, {payload}) => {
+            state.markerLat = payload;
+        },
         setRaceboard: (state, {payload}) => {
             for (const [key, value] of Object.entries(payload)) {
                 if (typeof state.raceboard[key] !== 'undefined') {
@@ -103,6 +130,9 @@ export const app = createSlice({
         setRaceTurnoutPercent: (state, {payload}) => {
             state.raceboard.turnoutPercent = payload;
         },  
+        setColorFirstParty: (state, {payload}) => {
+            state.raceboard.colorFirstPary = payload;
+        },
         setRaceParty: (state, {payload}) => {
             state.raceboard['p'+payload.i+'Party'] = payload.payload;
         },
@@ -121,6 +151,12 @@ export const app = createSlice({
         setRacePercent: (state, {payload}) => {
             state.raceboard['p'+payload.i+'Percent'] = payload.payload;
         },
+        setRaceTie: (state, {payload}) => {
+            state.raceboard.tie = payload;
+        },
+        setReelected: (state, {payload}) => {
+            state.raceboard.reelected = payload;
+        }
     }
 });
 
@@ -131,6 +167,12 @@ export const {
     setShowRaceChart,
     setShowTelestrator,
     setReverse,
+    setClickedMarker,
+    setStateLayerId,
+    setMunLayerId,
+    setDisLayerId,
+    setMarkerLng,
+    setMarkerLat,
     setTelestratorStroke,
     setTelestratorColor,
     setShowColorPicker,
@@ -145,7 +187,10 @@ export const {
     setRaceTitle,    
     setRaceTotalVote,
     setRaceTurnoutPercent,
+    setColorFirstParty,
     setRaceVote,
     setRacePercent,
+    setRaceTie,
+    setReelected
 } = app.actions;
 export default app.reducer;

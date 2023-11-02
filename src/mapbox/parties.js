@@ -32,5 +32,11 @@ export const Parties = {
     "PRD-PT": "PRD_PT_ALIANZA_Sh",
     PANAL: "NVA_ALIANZA_Sh",
     MC: "MC_Sh"
+  },
+  "cong-2009": {
+    "PRI-PVEM": "PRI_PVEM_Sh",
+    PAN: "PAN_Sh",
+    PRD: "PRD_Sh",
+    "PT-CONVERGENCIA": "PT_CONVERGENCIA_Sh"
   }
 };

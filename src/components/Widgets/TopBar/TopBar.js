@@ -28,7 +28,7 @@ const TopBar = () => {
         //maxHeight: "10%"
       }}
     >
-      <Box style={{ backgroundColor: "#ffffff", width: '7.5%' }}>
+      <Box style={{ backgroundColor: "#000", width: '8.1%', display: 'flex', justifyContent: 'center' }}>
         <img
           className={"topLogo"}
           style={{ height: "100%", maxWidth: "100%" }}
@@ -47,7 +47,7 @@ const TopBar = () => {
         <Text
           className={"topTitleText"}
           sx={{
-            marginLeft: "2%",
+            marginLeft: "1.2%",
             fontWeight: "bold",
             fontSize: "4.1rem",
             whiteSpace: "nowrap"

@@ -4,9 +4,9 @@ export const StateOlWidth = [
   ["linear"],
   ["zoom"],
   4,
-  0.0,
+  1.0,
   7,
-  5.0
+  2.0
 ];
 
 export const MunFillOpacity = (opacity) => [
@@ -14,7 +14,7 @@ export const MunFillOpacity = (opacity) => [
   ["exponential", 0.5],
   ["zoom"],
   4,
-  0.0,
+  opacity,
   4.5,
   opacity
 ];
@@ -24,7 +24,7 @@ export const MunDisFillOpacity = (opacity) => [
   ["exponential", 0.5],
   ["zoom"],
   8,
-  0.0,
+  opacity,
   8.5,
   opacity
 ];
@@ -34,13 +34,13 @@ export const DisFillOpacity = (opacity) => [
   ["exponential", 0.5],
   ["zoom"],
   4,
-  0.0,
+  opacity,
   4.5,
   opacity,
   8,
   opacity,
   8.5,
-  0.0
+  opacity
 ];
 
 export const StateFillOpacity = [
@@ -48,7 +48,7 @@ export const StateFillOpacity = [
   ["exponential", 0.5],
   ["zoom"],
   4,
-  0.0,
+  1.0,
   4.5,
   1.0,
   6.5,
@@ -90,9 +90,9 @@ export const MunOutlineColor = (fillColor) => [
   ["exponential", 0.5],
   ["zoom"],
   5,
-  fillColor,
+  ["to-color", "white"],
   6,
-  fillColor,
+  ["to-color", "white"],
   7,
   ["to-color", "white"]
 ];
@@ -102,9 +102,9 @@ export const MunDisOutlineColor = (fillColor) => [
   ["exponential", 0.5],
   ["zoom"],
   5,
-  fillColor,
+  ["to-color", "white"],
   6,
-  fillColor,
+  ["to-color", "white"],
   7,
   ["to-color", "white"]
 ];
@@ -114,9 +114,9 @@ export const DisOutlineColor = (fillColor) => [
   ["exponential", 0.5],
   ["zoom"],
   5,
-  fillColor,
+  ["to-color", "white"],
   6,
-  fillColor,
+  ["to-color", "white"],
   7,
   ["to-color", "white"]
 ];
@@ -126,7 +126,7 @@ export const StateOutlineColor = (fillColor) => [
   ["exponential", 0.5],
   ["zoom"],
   4,
-  fillColor,
+  ["to-color", "white"],
   4.5,
   ["to-color", "white"],
   7,

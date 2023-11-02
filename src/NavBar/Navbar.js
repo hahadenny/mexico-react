@@ -1,5 +1,4 @@
-import { useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Navbar, ScrollArea, createStyles, rem } from "@mantine/core";
 import {
   /*IconList,
@@ -13,30 +12,37 @@ import {
   IconLogout2,
   IconBookmark,*/
   IconHome,
+  IconArrowBack
 } from "@tabler/icons-react";
+
 import { LinksGroup } from "./NavbarLinksGroup";
-import { DefaultLng, DefaultLat, DefaultZoom } from "../mapbox/settings";
-import {FormattedMessage} from 'react-intl';
-import {
-  setShowRaceboard,
-} from "../redux/app/slice";
+import { FormattedMessage } from "react-intl";
+//import { setShowRaceboard, setClickedMarker } from "../redux/app/slice";
 import { appSelector } from "../redux/app/selectors";
 
 const menuData = [
   {
-    label: <FormattedMessage id={'Presidential'} />,
-    key: 'Presidential',
+    label: "Race Chart",
+    key: "RaceChart",
+    toggle: true
+  },
+  {
+    label: <FormattedMessage id={"Federal"} />,
+    key: "Federal",
     //icon: IconBuildingMonument,
     initiallyOpened: true,
     links: [
+      { key: "2021", label: "2021", year: "2021", raceType: "cong" },
       { key: "2018", label: "2018", year: "2018", raceType: "pres" },
+      { key: "2015", label: "2015", year: "2015", raceType: "cong" },
       { key: "2012", label: "2012", year: "2012", raceType: "pres" },
+      { key: "2009", label: "2009", year: "2009", raceType: "cong" },
       { key: "2006", label: "2006", year: "2006", raceType: "pres" }
     ]
   },
   {
-    label: <FormattedMessage id={'Gubernatorial'} />,
-    key: 'Gubernatorial',
+    label: <FormattedMessage id={"Gubernatorial"} />,
+    key: "Gubernatorial",
     //icon: IconBuildingArch,
     initiallyOpened: false,
     links: [
@@ -46,29 +52,18 @@ const menuData = [
     ]
   },
   {
-    label: <FormattedMessage id={'Congressional'} />,
-    key: 'Congressional',
-    //icon: IconBuildingCommunity,
-    initiallyOpened: false,
-    links: [
-      { key: "2021", label: "2021", year: "2021", raceType: "cong" },
-      { key: "2015", label: "2015", year: "2015", raceType: "cong" },
-      { key: "2009", label: "2009", year: "2009", raceType: "cong" }
-    ]
-  },
-  {
-    label: <FormattedMessage id={'AddBookmark'} />,
-    key: 'AddBookmark',
+    label: <FormattedMessage id={"AddBookmark"} />,
+    key: "AddBookmark"
     //icon: IconBookmark,
   },
   {
-    label: <FormattedMessage id={'Bookmarks'} />,
-    key: 'Bookmarks',
+    label: <FormattedMessage id={"Bookmarks"} />,
+    key: "Bookmarks"
     //icon: IconList,
   },
   {
-    label: <FormattedMessage id={'VoteCircles'} />,
-    key: 'VoteCircles',
+    label: <FormattedMessage id={"VoteCircles"} />,
+    key: "VoteCircles",
     //icon: IconChartCircles,
     toggle: true
   },
@@ -79,40 +74,35 @@ const menuData = [
   //   toggle: true
   // },
   {
-    label: <FormattedMessage id={'ForceMunicipals'} />,
-    key: 'ForceMunicipals',
+    label: <FormattedMessage id={"ForceMunicipals"} />,
+    key: "ForceMunicipals",
     //icon: IconChartTreemap,
     toggle: true
   },
   {
-    label: <FormattedMessage id={'ForceDistricts'} />,
-    key: 'ForceDistricts',
+    label: <FormattedMessage id={"ForceDistricts"} />,
+    key: "ForceDistricts",
     //icon: IconChartTreemap,
     toggle: true
-  },  
+  },
   /*{
     label: <FormattedMessage id={'Settings'} />,
     key: 'Settings',
     //icon: IconSettings
   },*/
   {
-    label: 'Race Chart',
-    key: 'RaceChart',
+    label: "Telestrator",
+    key: "Telestrator",
     toggle: true
   },
   {
-    label: 'Telestrator',
-    key: 'Telestrator',
+    label: "Reverse",
+    key: "Reverse",
     toggle: true
   },
   {
-    label: 'Reverse',
-    key: 'Reverse',
-    toggle: true
-  },
-  {
-    label: <FormattedMessage id={'Logout'} />,
-    key: 'Logout',
+    label: <FormattedMessage id={"Logout"} />,
+    key: "Logout"
     //icon: IconLogout2
   }
 ];
@@ -120,11 +110,11 @@ const menuData = [
 const useStyles = createStyles((theme) => ({
   navbar: {
     //backgroundColor:
-      //theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.white,
-    backgroundColor: 'rgba(237,237,237,0.5)',
-    backdropFilter:'blur(5px)',
+    //theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.white,
+    backgroundColor: "rgba(237,237,237,0.5)",
+    backdropFilter: "blur(5px)",
     paddingBottom: 0,
-    marginTop: '50px',
+    marginTop: "50px",
     overflowX: "hidden"
   },
 
@@ -146,7 +136,7 @@ const useStyles = createStyles((theme) => ({
 
   linksInner: {
     //paddingTop: theme.spacing.md,
-    paddingTop: '15px',
+    paddingTop: "15px",
     paddingBottom: theme.spacing.xl
   },
 
@@ -159,11 +149,25 @@ const useStyles = createStyles((theme) => ({
   }
 }));
 
-export default function NavbarNested({mapRef, markerRef, popupRef, canvasRef, addFilter, removeFilter}) {
+export default function NavbarNested({
+  mapRef,
+  markerRef,
+  popupRef,
+  canvasRef,
+  goHome,
+  goBack,
+  addFilter,
+  removeFilter,
+  selectFeature,
+  unselectFeature,
+  zoomAndReveal,
+  hideLayer,
+  showLayer,
+  getParallelFeatures
+}) {
   const { classes } = useStyles();
   const raceType = useSelector((state) => state.raceType.value);
-  const dispatch = useDispatch();
-  
+
   const app = useSelector(appSelector);
 
   const links = menuData.map((item) =>
@@ -176,33 +180,75 @@ export default function NavbarNested({mapRef, markerRef, popupRef, canvasRef, ad
         popupRef={popupRef}
         canvasRef={canvasRef}
         addFilter={addFilter}
+        selectFeature={selectFeature}
+        unselectFeature={unselectFeature}
+        zoomAndReveal={zoomAndReveal}
+        hideLayer={hideLayer}
+        showLayer={showLayer}
+        getParallelFeatures={getParallelFeatures}
       />
     )
   );
-  
-  const goHome = useCallback(() => {
-    mapRef.current.flyTo({
-        center: [DefaultLng, DefaultLat],
-        zoom: DefaultZoom,
-        bearing: 0,
-        pitch: 0,         
-        duration: 3000, // Animate over 3 seconds
-        essential: true // This animation is considered essential with respect to prefers-reduced-motion
-    });
-    dispatch(setShowRaceboard(false));
-    removeFilter();
-  }, [mapRef, dispatch, removeFilter]);
-  
-  let homeIconSize = '1.2rem';
+
+  let homeIconSize = "1.2rem";
+  let backIconSize = "1.2rem";
   //if (window.screen.availWidth > 3000)
-    //homeIconSize = '2.4rem';
+  //homeIconSize = '2.4rem';
 
   return (
-    <Navbar width={{ sm: 250 }} p="sm" className={classes.navbar} sx={{ right: app.reverse ? '0px' : 'auto', left: app.reverse ? 'auto' : '0px' }}>
+    <Navbar
+      width={{ sm: 250 }}
+      p="sm"
+      className={classes.navbar}
+      sx={{
+        right: app.reverse ? "0px" : "auto",
+        left: app.reverse ? "auto" : "0px"
+      }}
+    >
       <Navbar.Section className={classes.header}></Navbar.Section>
 
       <Navbar.Section grow className={classes.links} component={ScrollArea}>
-        <div className={'home'} style={{marginTop:'20px', width:'100%', textAlign:'center', backgroundColor:'#000', fontWeight:'600', padding:'5px 0px', fontSize:'18px', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center'}} onClick={goHome}><IconHome size={homeIconSize} strokeWidth="2.3" /> &nbsp;Home</div>
+        <div
+          className={"home"}
+          style={{
+            marginTop: "20px",
+            width: "100%",
+            textAlign: "center",
+            backgroundColor: "#000",
+            fontWeight: "600",
+            padding: "5px 0px",
+            fontSize: "18px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+          onClick={goHome}
+        >
+          <IconHome size={homeIconSize} strokeWidth="2.3" /> &nbsp;
+          <FormattedMessage id={"Home"} />
+        </div>
+
+        <div
+          className={"back"}
+          style={{
+            marginTop: "20px",
+            width: "100%",
+            textAlign: "center",
+            backgroundColor: "#000",
+            fontWeight: "600",
+            padding: "5px 0px",
+            fontSize: "18px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+          onClick={goBack}
+        >
+          <IconArrowBack size={backIconSize} strokeWidth="2.3" /> &nbsp;
+          <FormattedMessage id={"Back"} />
+        </div>
         {links && <div className={classes.linksInner}>{links}</div>}
       </Navbar.Section>
 

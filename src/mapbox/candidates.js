@@ -2,6 +2,7 @@ import PRDPTCONVERGENCIA2006 from '../assets/img/candidates/PRD-PT-CONVERGENCIA2
 import PAN2006 from '../assets/img/candidates/PAN2006.jpg';
 import PRIPVEM2006 from '../assets/img/candidates/PRI-PVEM2006.jpg';
 import PSD2006 from '../assets/img/candidates/PSD2006.jpg';
+import ASDC2006 from '../assets/img/candidates/ASDC2006.jpg';
 import PANAL2006 from '../assets/img/candidates/PANAL2006.jpg';
 import PAN2012 from '../assets/img/candidates/PAN2012.jpg';
 import PANAL2012 from '../assets/img/candidates/PANAL2012.jpg';
@@ -31,6 +32,7 @@ import PRI from '../assets/img/candidates/PRI2021.png';
 import PES from '../assets/img/candidates/PES2021.png';
 import PAN from '../assets/img/candidates/PAN2021.png';
 import PRD from '../assets/img/candidates/PRD2021.png';
+import PH from '../assets/img/candidates/PH2021.png';
 import RSP from '../assets/img/candidates/RSP2021.png';
 import MORENA from '../assets/img/candidates/MORENA2021.png';
 import MC from '../assets/img/candidates/MC2021.png';
@@ -42,6 +44,7 @@ const CandidateImgs = {
     PAN2006,
     PRIPVEM2006,
     PSD2006,
+    ASDC2006,
     PANAL2006,
     PAN2012,
     PANAL2012,
@@ -71,6 +74,7 @@ const CandidateImgs = {
     PES,
     PAN,
     PRD,
+    PH,
     RSP,
     MORENA,
     MC,

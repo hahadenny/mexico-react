@@ -34,11 +34,17 @@ import { update as updateForceDis } from "../../../../actions/forceMunSlice";
 import { update as updateVoteCircle } from "../../../../actions/voteCircleSlice";
 import { update as updateTurnout } from "../../../../actions/turnoutSlice";
 import { update as updateMargin } from "../../../../actions/marginSlice";
+import { update as updateFeature } from "../../../../actions/featureSlice";
 import {
     setOpenModal,
     setShowBookmarks, 
     setShowRaceboard,
     setRaceboard,
+    setShowRaceChart,
+    setReverse,
+    setClickedMarker,
+    setMarkerLng,
+    setMarkerLat
 } from "../../../../redux/app/slice";
 import {PartyColors} from "../../../../mapbox/colors";
 import ActionButton from "../../../Grid/ActionButton";
@@ -46,7 +52,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import { useIntl } from "react-intl";
 
-const MenuBookmarksListing = ({mapRef, markerRef, popupRef, addFilter}) => {
+const MenuBookmarksListing = ({mapRef, markerRef, popupRef, addFilter, zoomAndReveal, hideLayer, showLayer}) => {
     const [page/*, setPage*/] = useState(1);
     const gridRef = useRef();
     const dispatch = useDispatch();
@@ -75,6 +81,43 @@ const MenuBookmarksListing = ({mapRef, markerRef, popupRef, addFilter}) => {
     
     const onDelete = useTableGridDeleteRows(gridRef, deleteBookmarks, deleteBookmarkGroups, 'Bookmark');
     
+    const revealLayer = useCallback((data) => {
+        if (data['feature'].sourceLayer === "states") {
+            if (data['clickedMarker']) {
+                if (data['stateLayerId'])
+                    hideLayer(data['stateLayerId']);
+                if (data['raceType'] === "cong") {
+                    if (data['munLayerId'])
+                        hideLayer(data['munLayerId']);
+                    if (data['disLayerId'])
+                        showLayer(data['disLayerId']);
+                }
+                else {                    
+                    if (data['munLayerId'])
+                        showLayer(data['munLayerId']);
+                }
+            }
+            else {
+                if (data['stateLayerId'])
+                    showLayer(data['stateLayerId'])
+            }
+        }
+        else if (data['feature'].sourceLayer === "districts") {
+            if (data['stateLayerId'])
+                hideLayer(data['stateLayerId']);
+            if (data['disLayerId'])
+                showLayer(data['disLayerId']);
+            if (data['munLayerId'])
+                hideLayer(data['munLayerId']);
+        }
+        else if (data['feature'].sourceLayer === "municipals") {
+            if (data['stateLayerId'])
+                hideLayer(data['stateLayerId']);
+            if (data['munLayerId'])
+                showLayer(data['munLayerId']);
+        }
+    }, [hideLayer, showLayer]);
+    
     const onGo = useCallback((params) => {       
         if (document.getElementById('raceboard')) {
             document.getElementById('raceboard').classList.remove('board-opened');
@@ -90,6 +133,10 @@ const MenuBookmarksListing = ({mapRef, markerRef, popupRef, addFilter}) => {
         dispatch(updateVoteCircle(data['voteCircle']));
         dispatch(updateTurnout(data['turnout']));
         dispatch(updateMargin(data['margin']));
+        dispatch(updateFeature(data['feature']));
+        dispatch(setShowRaceChart(data['showRaceChart']));
+        dispatch(setReverse(data['reverse']));
+        dispatch(setClickedMarker(data['clickedMarker']));
         if (data['lng']) {
             mapRef.current.flyTo({
                 center: [data['lng'], data['lat']],
@@ -105,20 +152,41 @@ const MenuBookmarksListing = ({mapRef, markerRef, popupRef, addFilter}) => {
                 addFilter(data['raceboard']['state']);
             }, 100);
         }
+        setTimeout(() => {
+            revealLayer(data);
+        }, 100);
         if (data['showRaceboard']) {
             dispatch(setShowRaceboard(true));
             dispatch(setRaceboard(data['raceboard']));
+            dispatch(setMarkerLng(data['markerLng']));
+            dispatch(setMarkerLat(data['markerLat']));
             let markerColor = "#111111";
-            if (PartyColors[data['raceboard']['p1Party']])
+            let textColor = "#fff";
+            if (data['turnout'])
+                markerColor = PartyColors['INE'].high;
+            else if (data['raceboard']['colorFirstPary'] && PartyColors[data['raceboard']['colorFirstPary']]) {
+                markerColor = PartyColors[data['raceboard']['colorFirstPary']].high;
+                textColor = PartyColors[data['raceboard']['colorFirstPary']].contrast;
+            }
+            else if (PartyColors[data['raceboard']['p1Party']]) {
                 markerColor = PartyColors[data['raceboard']['p1Party']].high;
-            if (markerRef.current)
+                textColor = PartyColors[data['raceboard']['p1Party']].contrast;
+            }
+            if (markerRef.current) {
                 markerRef.current.remove();
+                markerRef.current
+                  .getElement()
+                  .removeEventListener("click", zoomAndReveal.bind(this, data['feature']));
+            }
             markerRef.current = new mapboxgl.Marker({
                 //color: data['markerColor'],
                 color: markerColor,
                 draggable: false
             }).setLngLat([data['markerLng'], data['markerLat']])
             .addTo(mapRef.current);
+            markerRef.current
+              .getElement()
+              .addEventListener("click", zoomAndReveal.bind(this, data['feature']));
             if (popupRef.current)
                 popupRef.current.remove();
             let popup_txt = '<div class="mapPopup">';
@@ -133,7 +201,12 @@ const MenuBookmarksListing = ({mapRef, markerRef, popupRef, addFilter}) => {
             //else
               //popup_txt += data['raceboard']['state'];          
             popup_txt += "</div>";
-            popup_txt += `<div class="mapPopupParty" style="background-color: ${markerColor};color:#fff;">${data['raceboard']['p1Party']}</div>`;
+            popup_txt += `<div class="mapPopupParty" style="background-color:${markerColor};color:${textColor};white-space:nowrap;">`;
+            if (data['turnout'])
+              popup_txt += Math.round(data['raceboard']['turnoutPercent']) + "%";
+            else
+              popup_txt += data['raceboard']['p1Party'];
+            popup_txt += `</div>`;
               
             /*popup_txt += '<br><span style="color:'+PartyColors[data['raceboard']['p1Party']]?.high+';">';
             if (['Tie', 'No cómputo'].includes(data['raceboard']['p1Party'])) {
@@ -147,10 +220,10 @@ const MenuBookmarksListing = ({mapRef, markerRef, popupRef, addFilter}) => {
               popup_txt += '<br>('+data['raceboard']['p1Vote'].toLocaleString(intl.locale)+' Votes)';*/
           
             if (data['raceboard']['totalVote']) {
-              const vote_msg = intl.formatMessage({id: 'Votes'}, {votes: data['raceboard']['totalVote'].toLocaleString(intl.locale)});
+              const vote_msg = intl.formatMessage({id: 'Votes'}, {votes: data['raceboard']['totalVote'].toLocaleString('en')});
               popup_txt += '<div class="mapPopupVotes">' + vote_msg;
               if (data['raceboard']['layer'] === 'states' && data['raceboard']['turnoutPercent'])
-                popup_txt += ' - ' + Math.round(data['raceboard']['turnoutPercent']) + '% Turnout';
+                popup_txt += ' - ' + Math.round(data['raceboard']['turnoutPercent']) + '% ' + intl.formatMessage({ id: "Turnout" });;
               popup_txt += "</div>";
             }
             
@@ -169,7 +242,7 @@ const MenuBookmarksListing = ({mapRef, markerRef, popupRef, addFilter}) => {
                 markerRef.current.remove();
         }
         //dispatch(setShowBookmarks(false));
-    }, [dispatch, mapRef, markerRef, popupRef, intl, addFilter]);
+    }, [dispatch, mapRef, markerRef, popupRef, intl, addFilter, zoomAndReveal, revealLayer]);
     
     const onBack = useCallback((params) => {
         dispatch(setShowBookmarks(false));        

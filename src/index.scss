@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import "./variables";
 
 body {
@@ -116,6 +116,10 @@ body {
   to {
   }
 } 
+
+#racechart.board-opened {
+  width: calc(100% - 7.5% - 0px - 2%) !important;
+}
 
 .mantine-Navbar-root .mantine-Text-root {
     background-color: rgba(188,188,188,0.3);
@@ -235,21 +239,26 @@ body {
 .mapPopupTitle {
     flex: 1;
     color: white;
-    font-size: 1.3rem;
+    font-size: 1.6rem;
     margin-bottom: 0rem;
+    font-weight: 600;
+    padding-top: 0.2rem;
 }
 
 .mapPopupLocation {
     flex: 1;
-    font-size: 1rem;
-    line-height: 0.8rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.3rem;
 }
 
 .mapPopupParty {
     flex: 1;
-    font-size: 1.3rem;   
+    font-size: 1.4rem;   
+    line-height: 1.7rem;
     margin-bottom: 0rem; 
     margin-top: 0.3rem;
+    font-weight: 800;
 }
 
 .mapPopupVotes {
@@ -258,6 +267,7 @@ body {
     font-size: 0.75rem;
     line-height: 1.5rem;
     background-color: #fff;
+    font-weight: 600 !important;
 }
 
 @media screen and (min-width: 3000px) {
@@ -275,10 +285,12 @@ body {
         right: 20px;
     }
     
-    .home {
+    .home,.back {
         font-size: 35px !important;
         margin-bottom: 15px;
+        margin-top: 0px !important;
         padding: 12px 0px !important;
+        font-weight: 500;
     }
     
     .tabler-icon-home {
@@ -287,12 +299,13 @@ body {
     }
 
     .mantine-Navbar-root .mantine-Text-root {
-        font-size: 28px;
+        font-size: 29px;
         margin-top: 20px;
         margin-bottom: 20px;
         padding-top: 12px;
         padding-bottom: 12px;
         border-left: solid 15px #5a5a5a;
+        font-weight: 600;
     }
     
     .mantine-Navbar-root .mantine-Input-input,  .mantine-Navbar-root .mantine-InputWrapper-label, .menuLabel {
@@ -304,9 +317,10 @@ body {
     }
     
     .mantine-Navbar-root .mantine-Group-root {
-        font-size: 28px;
+        font-size: 29px;
         padding-top: 12px;
         padding-bottom: 12px;
+        font-weight: 600;
     }
     
     .mantine-Navbar-root .mantine-UnstyledButton-root {
@@ -324,27 +338,28 @@ body {
     
     .raceboard {
         width: 1000px !important;
-        #border-left: solid 12px $primary_hex !important;
+        //border-left: solid 12px $primary_hex !important;
         font-size: 31px !important;
-        height: calc(100vh - 212px) !important;
+        height: calc(100vh - 11rem) !important;
     }
     
     .raceboardTitleBox {
-        #border-bottom: solid 7px #111 !important;
+        //border-bottom: solid 7px #111 !important;
         margin-bottom: 20px !important;
     }
     
     .raceboardTitle {
-        font-size: 90px !important;
+        font-size: 82px !important;
         line-height: 90px !important;
         padding-top: 19px !important;
+        font-weight: 600;
     }
 
     .raceboardSubtitle {
-        font-size: 50px !important;
-        font-weight: normal;
+        font-size: 46px !important;
+        font-weight: 600;
         line-height: 50px !important;
-        padding-bottom: 13px !important;
+        margin-bottom: -10px !important;
     }
     
     .raceCheck {
@@ -361,18 +376,19 @@ body {
     }
     
     .partySubBox {
-        #border-bottom: solid 2px #111 !important;
+        //#border-bottom: solid 2px #111 !important;
         margin-bottom: 1rem !important;
     }
     
     .party4SubBox {
-        #margin-bottom: 10px !important;
+        //#margin-bottom: 10px !important;
     }
     
     .racePartyName {
-        font-size: 50px !important;
+        font-size: 44px !important;
         line-height: 63px !important;
         padding-bottom: 10px !important;
+        font-weight: 800;
     }
 
     .racePartyNameLong {
@@ -392,6 +408,12 @@ body {
         height: 38px !important;
     }
     
+    .raceElectCheckCong {
+        margin-left: 0.5rem !important;
+        width: 36px !important;
+        height: 36px !important;
+    }
+    
     .raceboardWinnerCong {
         font-size: 2rem !important;
     }
@@ -402,7 +424,7 @@ body {
     
     .raceName {
         height: 135px !important;        
-        font-size: 44px;
+        font-size: 2.2rem;
     }
     
     .raceTitle {
@@ -437,7 +459,7 @@ body {
     }
     
     .raceChart {
-        width: calc(100% - 7.5% - 1000px - 2.4%) !important;
+        width: calc(100% - 7.5% - 1000px - 2%) !important;
         bottom: 5rem !important;
     }
 
@@ -446,11 +468,11 @@ body {
     }
     
     .raceChartParty {
-        font-size: 2.4rem !important;
+        font-size: 1.6rem !important;
     }
     
     .raceChartNum {
-        font-size: 3rem !important;
+        font-size: 2.6rem !important;
     }
     
     .raceChartBar {
@@ -469,12 +491,12 @@ body {
     }
     
     .topBar {
-        height:212px;
+        height: 11rem;
     }
     
     .topLogo {
-        #height: 212px !important;
-        #max-width: 368px !important;
+        //height: 212px !important;
+        //max-width: 368px !important;
     }
     
     .yearText {
@@ -483,6 +505,7 @@ body {
     
     .topTitleText {
         font-size: 8rem !important;        
+        padding-top: 1rem;
     }
     
     .ag-cell-value {

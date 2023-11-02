@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import raceTypeReducer from "./actions/raceTypeSlice";
 import partyReducer from "./actions/partySlice";
 import yearReducer from "./actions/yearSlice";
+import featureReducer from "./actions/featureSlice";
 import forceMunReducer from "./actions/forceMunSlice";
 import forceDisReducer from "./actions/forceDisSlice";
 import voteCircleReducer from "./actions/voteCircleSlice";
@@ -21,6 +22,7 @@ const reducer = combineReducers({
   raceType: raceTypeReducer,
   party: partyReducer,
   year: yearReducer,
+  feature: featureReducer,
   forceMun: forceMunReducer,
   forceDis: forceDisReducer,
   voteCircle: voteCircleReducer,
