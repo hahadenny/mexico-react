@@ -48,6 +48,7 @@ import { appSelector, getOpenModal } from "./redux/app/selectors";
 import {
   setOpenModal,
   setShowRaceboard,
+  setShowBookmarks,
   setRaceLayer,
   setRaceState,
   setRaceMun,
@@ -75,6 +76,8 @@ import { update as updateTurnout } from "./actions/turnoutSlice";
 import { update as updateMargin } from "./actions/marginSlice";
 import { update as updateFeature } from "./actions/featureSlice";
 import { update as updateForceDis } from "./actions/forceDisSlice";
+import { update as updateYear } from "./actions/yearSlice";
+import { update as updateRaceType } from "./actions/raceTypeSlice";
 import {
   DefaultLng,
   DefaultLat,
@@ -107,6 +110,8 @@ const Home = () => {
   const stateLayerId = useRef(null);
   const stateOlSourceId = useRef(null);
   const stateOlLayerId = useRef(null);
+  const stateFillSourceId = useRef(null);
+  const stateFillLayerId = useRef(null);
   const disSourceId = useRef(null);
   const disLayerId = useRef(null);
   const munSourceId = useRef(null);
@@ -138,7 +143,6 @@ const Home = () => {
 
   const prevForceMun = usePrevious(forceMun);
   const prevForceDis = usePrevious(forceDis);
-  const prevParty = usePrevious(party);
   const prevVoteCircle = usePrevious(voteCircle);
 
   const intl = useIntl();
@@ -435,221 +439,6 @@ const Home = () => {
     }
   }, []);
 
-  const revealLayer = useCallback(
-    (features, dir = ZOOM_DIR_ENUM.FORWARD) => {
-      if (forceDis || forceMun) return;
-
-      const feature = features[0];
-      if (dir === ZOOM_DIR_ENUM.FORWARD) {
-        if (feature.sourceLayer === "states") {
-          hideLayer(stateLayerId.current);
-          lastStateFeature.current = features;
-
-          if (raceType === "cong") {
-            if (munLayerId.current) {
-              hideLayer(munLayerId.current);
-            }
-
-            if (disLayerId.current) {
-              showLayer(disLayerId.current);
-              currentLayer.current = "districts";
-            }
-          } else {
-            if (munLayerId.current) {
-              showLayer(munLayerId.current);
-              currentLayer.current = "municipals";
-            }
-
-            if (disLayerId.current) {
-              hideLayer(disLayerId.current);
-            }
-          }
-        } else if (feature.sourceLayer === "districts") {
-          if (disLayerId.current) {
-            hideLayer(disLayerId.current);
-            lastDisFeature.current = features;
-          }
-
-          if (munLayerId.current) {
-            showLayer(munLayerId.current);
-            currentLayer.current = "municipals";
-          }
-        } else if (feature.sourceLayer === "municipals") {
-          lastMunFeature.current = feature;
-        }
-      } else if (dir === ZOOM_DIR_ENUM.BACKWARD) {
-        if (feature.sourceLayer === "states") {
-          showLayer(stateLayerId.current);
-          lastStateFeature.current = feature;
-          currentLayer.current = "states";
-
-          if (munLayerId.current) {
-            hideLayer(munLayerId.current);
-          }
-
-          if (disLayerId.current) {
-            hideLayer(disLayerId.current);
-          }
-        } else if (feature.sourceLayer === "districts") {
-          if (disLayerId.current) {
-            showLayer(disLayerId.current);
-            lastDisFeature.current = feature;
-            currentLayer.current = "districts";
-          }
-
-          if (munLayerId.current) {
-            hideLayer(munLayerId.current);
-          }
-        } else if (feature.sourceLayer === "municipals") {
-          lastMunFeature.current = features;
-        }
-      }
-    },
-    [raceType, showLayer, hideLayer, forceDis, forceMun]
-  );
-
-  const zoomAndReveal = useCallback(
-    (features) => {
-      dispatch(setClickedMarker(true));
-      revealLayer(features);
-      zoomToFeat(features);
-    },
-    [revealLayer, zoomToFeat, dispatch]
-  );
-
-  const loadMarker = useCallback(
-    (features, lng, lat) => {
-      dispatch(setMarkerLng(lng));
-      dispatch(setMarkerLat(lat));
-
-      if ((!lng || !lat) && marker.current) {
-        const lngLat = marker.current.getLngLat();
-        lng = lngLat.lng;
-        lat = lngLat.lat;
-      }
-
-      let color_first_party = false;
-      if (features[0].sourceLayer === "districts") {
-        color_first_party = features[0].properties.FIRST;
-      }
-
-      const first_party =
-        features[0].properties.FIRST_DISPLAY ||
-        features[0].properties.FIRST_PARTY ||
-        features[0].properties.FIRST ||
-        "";
-
-      let markerColor = "#111111";
-      let textColor = "#fff";
-      if (turnout) markerColor = PartyColors["INE"].high;
-      else if (
-        features[0]?.properties?.TIE === "TRUE" ||
-        features[0]?.properties?.TIE === true
-      ) {
-        markerColor = "#B4B4B4";
-      } else if (color_first_party && PartyColors[color_first_party]) {
-        markerColor = PartyColors[color_first_party].high;
-        textColor = PartyColors[color_first_party].contrast;
-      } else if (PartyColors[first_party]) {
-        markerColor = PartyColors[first_party].high;
-        textColor = PartyColors[first_party].contrast;
-      }
-
-      if (marker.current) {
-        marker.current.remove();
-        marker.current
-          .getElement()
-          .removeEventListener("click", zoomAndReveal.bind(this, features));
-      }
-
-      marker.current = new mapboxgl.Marker({
-        color: markerColor,
-        draggable: false
-      })
-        .setLngLat([lng, lat])
-        .addTo(map.current);
-
-      marker.current
-        .getElement()
-        .addEventListener("click", zoomAndReveal.bind(this, features));
-
-      if (popup.current) popup.current.remove();
-      let popup_txt = '<div class="mapPopup">';
-      let winner_msg = intl.formatMessage({ id: "WinnerPopup" });
-      if (features[0].properties.ESTADO)
-        winner_msg = voca.titleCase(features[0].properties.ESTADO);
-      else if (features[0].properties.NOMBRE_ESTADO)
-        winner_msg = voca.titleCase(features[0].properties.NOMBRE_ESTADO);
-      else if (features[0].properties.STATE_NAME)
-        winner_msg = voca.titleCase(features[0].properties.STATE_NAME);
-      popup_txt += `<div class="mapPopupTitle" style="background-color:#fff;color:#000;">${winner_msg}</div>`;
-      popup_txt += '<div class="mapPopupLocation">';
-      if (features[0].sourceLayer === "states") {
-        /*if (feature.properties.ESTADO)
-          popup_txt += voca.titleCase(feature.properties.ESTADO);
-        else if (feature.properties.NOMBRE_ESTADO)
-          popup_txt += voca.titleCase(feature.properties.NOMBRE_ESTADO);
-        else popup_txt += voca.titleCase(feature.properties.STATE_NAME);
-        */
-      } else {
-        if (typeof features[0].properties.DISTRICT_DISPLAY !== "undefined")
-          popup_txt += voca.titleCase(features[0].properties.DISTRICT_DISPLAY);
-        else popup_txt += voca.titleCase(features[0].properties.MUNICIPIO);
-      }
-      popup_txt += "</div>";
-
-      if (
-        features[0]?.properties?.TIE === "TRUE" ||
-        features[0]?.properties?.TIE === true
-      ) {
-        popup_txt += `<div class="mapPopupParty" style="background-color:#B4B4B4;color:#fff">`;
-        popup_txt += intl.formatMessage({ id: "Tie" });
-      } else {
-        popup_txt += `<div class="mapPopupParty" style="background-color:${markerColor};color:${textColor};">`;
-        if (turnout)
-          popup_txt += Math.round(features[0].properties.TURNOUT) + "%";
-        else popup_txt += `${first_party}`;
-      }
-      popup_txt += `</div>`;
-
-      if (features[0].properties.TOTAL_VOTOS) {
-        const vote_msg = intl.formatMessage(
-          { id: "Votes" },
-          {
-            votes: features[0].properties.TOTAL_VOTOS.toLocaleString(
-              //intl.locale
-              "en"
-            )
-          }
-        );
-        popup_txt += '<div class="mapPopupVotes">' + vote_msg;
-        if (
-          !turnout &&
-          features[0].sourceLayer === "states" &&
-          typeof features[0].properties.TURNOUT !== "undefined"
-        )
-          popup_txt +=
-            " - " +
-            Math.round(features[0].properties.TURNOUT) +
-            "% " +
-            intl.formatMessage({ id: "Turnout" });
-        popup_txt += "</div>";
-      }
-
-      popup_txt += "</div>";
-
-      if (1 || !["districts"].includes(features[0].sourceLayer)) {
-        popup.current = new mapboxgl.Popup({
-          offset: window.screen.availWidth > 3000 ? 120 : 45
-        })
-          .setLngLat([lng, lat])
-          .setHTML(popup_txt)
-          .addTo(map.current);
-      }
-    },
-    [intl, zoomAndReveal, turnout, dispatch]
-  );
-
   const addFilter = useCallback(
     (stateNameStr) => {
       if (!stateNameStr) {
@@ -727,6 +516,231 @@ const Home = () => {
     }
   }, [showLayer, hideLayer, forceMun, forceDis, party, voteCircle]);
 
+  const revealLayer = useCallback(
+    (features, dir = ZOOM_DIR_ENUM.FORWARD) => {
+      if (forceDis || forceMun) return;
+
+      const feature = features[0];
+      if (dir === ZOOM_DIR_ENUM.FORWARD) {
+        if (feature.sourceLayer === "states") {
+          hideLayer(stateLayerId.current);
+          lastStateFeature.current = features;
+
+          if (raceType === "cong") {
+            if (munLayerId.current) {
+              hideLayer(munLayerId.current);
+            }
+
+            if (disLayerId.current) {
+              showLayer(disLayerId.current);
+              currentLayer.current = "districts";
+            }
+          } else {
+            if (munLayerId.current) {
+              showLayer(munLayerId.current);
+              currentLayer.current = "municipals";
+            }
+
+            if (disLayerId.current) {
+              hideLayer(disLayerId.current);
+            }
+          }
+        } else if (feature.sourceLayer === "districts") {
+          if (disLayerId.current) {
+            hideLayer(disLayerId.current);
+            lastDisFeature.current = features;
+          }
+
+          if (munLayerId.current) {
+            showLayer(munLayerId.current);
+            currentLayer.current = "municipals";
+          }
+        } else if (feature.sourceLayer === "municipals") {
+          lastMunFeature.current = features;
+        }
+      } else if (dir === ZOOM_DIR_ENUM.BACKWARD) {
+        if (feature.sourceLayer === "states") {
+          showLayer(stateLayerId.current);
+          lastStateFeature.current = feature;
+          currentLayer.current = "states";
+          removeFilter();
+
+          if (munLayerId.current) {
+            hideLayer(munLayerId.current);
+          }
+
+          if (disLayerId.current) {
+            hideLayer(disLayerId.current);
+          }
+        } else if (feature.sourceLayer === "districts") {
+          if (disLayerId.current) {
+            showLayer(disLayerId.current);
+            lastDisFeature.current = features;
+            currentLayer.current = "districts";
+          }
+
+          if (munLayerId.current) {
+            hideLayer(munLayerId.current);
+          }
+        } else if (feature.sourceLayer === "municipals") {
+          lastMunFeature.current = features;
+        }
+      }
+    },
+    [raceType, showLayer, hideLayer, removeFilter, forceDis, forceMun]
+  );
+
+  const zoomAndReveal = useCallback(
+    (features) => {
+      dispatch(setClickedMarker(true));
+      revealLayer(features);
+      zoomToFeat(features);
+    },
+    [revealLayer, zoomToFeat, dispatch]
+  );
+
+  const loadMarker = useCallback(
+    (features, lng, lat) => {
+      dispatch(setMarkerLng(lng));
+      dispatch(setMarkerLat(lat));
+
+      if ((!lng || !lat) && marker.current) {
+        const lngLat = marker.current.getLngLat();
+        lng = lngLat.lng;
+        lat = lngLat.lat;
+      }
+
+      let color_first_party = false;
+      if (features[0].sourceLayer === "districts") {
+        color_first_party = features[0].properties.FIRST;
+      }
+
+      const first_party =
+        features[0].properties.FIRST_DISPLAY ||
+        features[0].properties.FIRST_PARTY ||
+        features[0].properties.FIRST ||
+        "";
+
+      let markerColor = "#111111";
+      let textColor = "#fff";
+      if (turnout) markerColor = PartyColors["INE"].high;
+      else if (
+        features[0]?.properties?.TIE === "TRUE" ||
+        features[0]?.properties?.TIE === true
+      ) {
+        markerColor = "#B4B4B4";
+      } else if (color_first_party && PartyColors[color_first_party]) {
+        markerColor = PartyColors[color_first_party].high;
+        textColor = PartyColors[color_first_party].contrast;
+      } else if (PartyColors[first_party]) {
+        markerColor = PartyColors[first_party].high;
+        textColor = PartyColors[first_party].contrast;
+      }
+
+      if (marker.current) {
+        marker.current.remove();
+        marker.current
+          .getElement()
+          .removeEventListener("click", zoomAndReveal.bind(this, features));
+      }
+
+      marker.current = new mapboxgl.Marker({
+        color: markerColor,
+        draggable: false
+      })
+        .setLngLat([lng, lat])
+        .addTo(map.current);
+
+      marker.current
+        .getElement()
+        .addEventListener("click", zoomAndReveal.bind(this, features));
+
+      if (popup.current) popup.current.remove();
+      let popup_txt = '<div class="mapPopup">';
+      let winner_msg = intl.formatMessage({ id: "WinnerPopup" });
+      if (features[0].properties.ESTADO)
+        winner_msg = voca.titleCase(
+          StatesAccents[features[0].properties.ESTADO.toUpperCase()] ||
+            features[0].properties.ESTADO
+        );
+      else if (features[0].properties.NOMBRE_ESTADO)
+        winner_msg = voca.titleCase(
+          StatesAccents[features[0].properties.NOMBRE_ESTADO.toUpperCase()] ||
+            features[0].properties.NOMBRE_ESTADO
+        );
+      else if (features[0].properties.STATE_NAME)
+        winner_msg = voca.titleCase(
+          StatesAccents[features[0].properties.STATE_NAME.toUpperCase()] ||
+            features[0].properties.STATE_NAME
+        );
+      popup_txt += `<div class="mapPopupTitle" style="background-color:#fff;color:#000;">${winner_msg}</div>`;
+      popup_txt += '<div class="mapPopupLocation">';
+      if (features[0].sourceLayer === "states") {
+        /*if (feature.properties.ESTADO)
+          popup_txt += voca.titleCase(feature.properties.ESTADO);
+        else if (feature.properties.NOMBRE_ESTADO)
+          popup_txt += voca.titleCase(feature.properties.NOMBRE_ESTADO);
+        else popup_txt += voca.titleCase(feature.properties.STATE_NAME);
+        */
+      } else {
+        if (typeof features[0].properties.DISTRICT_DISPLAY !== "undefined")
+          popup_txt += voca.titleCase(features[0].properties.DISTRICT_DISPLAY);
+        else popup_txt += voca.titleCase(features[0].properties.MUNICIPIO);
+      }
+      popup_txt += "</div>";
+
+      if (
+        features[0]?.properties?.TIE === "TRUE" ||
+        features[0]?.properties?.TIE === true
+      ) {
+        popup_txt += `<div class="mapPopupParty" style="background-color:#B4B4B4;color:#fff">`;
+        popup_txt += intl.formatMessage({ id: "Tie" });
+      } else {
+        popup_txt += `<div class="mapPopupParty" style="background-color:${markerColor};color:${textColor};">`;
+        if (turnout)
+          popup_txt += Math.round(features[0].properties.TURNOUT) + "%";
+        else popup_txt += `${first_party}`;
+      }
+      popup_txt += `</div>`;
+
+      if (features[0].properties.TOTAL_VOTOS) {
+        const vote_msg = intl.formatMessage(
+          { id: "Votes" },
+          {
+            votes: features[0].properties.TOTAL_VOTOS.toLocaleString(
+              //intl.locale
+              "en"
+            )
+          }
+        );
+        popup_txt += '<div class="mapPopupVotes">' + vote_msg + "</div>";
+        if (
+          !turnout &&
+          features[0].sourceLayer === "states" &&
+          typeof features[0].properties.TURNOUT !== "undefined"
+        )
+          popup_txt +=
+            '<div class="mapPopupTurnout">' +
+            Math.round(features[0].properties.TURNOUT) +
+            "% " +
+            intl.formatMessage({ id: "Turnout" }) +
+            "</div>";
+      }
+
+      popup_txt += "</div>";
+
+      if (1 || !["districts"].includes(features[0].sourceLayer)) {
+        popup.current = new mapboxgl.Popup({
+          offset: window.innerWidth > 3000 ? 120 : 45
+        })
+          .setLngLat([lng, lat])
+          .setHTML(popup_txt)
+          .addTo(map.current);
+      }
+    },
+    [intl, zoomAndReveal, turnout, dispatch]
+  );
+
   const selectFeature = useCallback(
     (
       features,
@@ -792,8 +806,8 @@ const Home = () => {
 
   const selectFeatureEvent = useCallback(
     (e) => {
-      console.log(e);
-      console.log(e.features);
+      console.log("Select Event", e);
+      console.log("Selected Feature", e.features);
 
       const statesToOffset = ["31", "23", "4", "27", "7"];
       const statesToOffsetReverse = ["2", "3"];
@@ -807,17 +821,21 @@ const Home = () => {
         false
       );
 
+      if (e.features[0].layer.id === "pres-mx-2012-state-fill") return;
+
       if (app.reverse) {
         if (
-          statesToOffsetReverse.includes(e.features[0].properties.ID_ESTADO) ||
-          statesToOffsetReverse.includes(e.features[0].properties.ESTADO)
+          (statesToOffsetReverse.includes(e.features[0].properties.ID_ESTADO) ||
+            statesToOffsetReverse.includes(e.features[0].properties.ESTADO)) &&
+          e.features[0].sourceLayer === "states"
         ) {
           zoomToFeat(e.features);
         }
       } else {
         if (
-          statesToOffset.includes(e.features[0].properties.ID_ESTADO) ||
-          statesToOffset.includes(e.features[0].properties.ESTADO)
+          (statesToOffset.includes(e.features[0].properties.ID_ESTADO) ||
+            statesToOffset.includes(e.features[0].properties.ESTADO)) &&
+          e.features[0].sourceLayer === "states"
         ) {
           zoomToFeat(e.features);
         }
@@ -854,8 +872,17 @@ const Home = () => {
         map.current.removeLayer(stateOlLayerId.current);
       }
 
+      if (map.current.getLayer(stateFillLayerId.current)) {
+        map.current.off("click", stateFillLayerId.current, selectFeatureEvent);
+        map.current.removeLayer(stateFillLayerId.current);
+      }
+
       if (map.current.getSource(stateOlSourceId.current)) {
         map.current.removeSource(stateOlSourceId.current);
+      }
+
+      if (map.current.getSource(stateFillSourceId.current)) {
+        map.current.removeSource(stateFillSourceId.current);
       }
 
       if (map.current.getSource(munSourceId.current)) {
@@ -914,6 +941,10 @@ const Home = () => {
           stateOlSourceId.current = src;
           stateOlLayerId.current = vectorLayerOutline.id;
           break;
+        case "state-fill":
+          stateFillSourceId.current = src;
+          stateFillLayerId.current = vectorLayerOutline.id;
+          break;
         case "state":
           stateSourceId.current = src;
           stateLayerId.current = vectorLayerOutline.id;
@@ -965,6 +996,25 @@ const Home = () => {
 
       const stateUrl = getMapboxUrl(raceType, year, false, "state");
 
+      const stateFillPaint = {
+        "fill-color": "white",
+        "fill-opacity": 0.1
+      };
+
+      loadSingleLayer(
+        `${raceType}-mx-${year}-state`,
+        `${raceType}-mx-${year}-state-fill`,
+        "states",
+        "state-fill",
+        stateUrl,
+        "fill",
+        {
+          minzoom: 1,
+          maxzoom: 22,
+          paint: stateFillPaint
+        }
+      );
+
       // if force district is enabled
       // and race type is not congressional
       // disable force district
@@ -976,7 +1026,12 @@ const Home = () => {
       // and force municipal is ehabled or force district is enabled
       // and vote circle is disabled
       // load districts
-      if (raceType === "cong" && (!forceMun || forceDis) && !voteCircle) {
+      if (
+        raceType === "cong" &&
+        (!forceMun || forceDis) &&
+        !voteCircle &&
+        !party
+      ) {
         const disColorExpression = getColorExpression(
           true,
           raceType,
@@ -1028,7 +1083,7 @@ const Home = () => {
 
       // if force district is not enabled
       // load municipals
-      if (!forceDis) {
+      if (!forceDis || party) {
         const munColorExpression = getColorExpression(
           true,
           raceType,
@@ -1142,13 +1197,14 @@ const Home = () => {
           }
         );
 
+        const shouldHideStateLayer =
+          forceMun || forceDis || voteCircle || party;
+
         const shouldShowStateLayer =
-          (!forceMun && !forceDis && !voteCircle && !party) ||
-          (prevForceMun && !forceMun) ||
-          (prevForceDis && !forceDis) ||
-          (prevParty !== null && party === null) ||
-          (currentLayer.current === "districts" && raceType !== "cong") ||
-          (prevVoteCircle && !voteCircle);
+          (prevForceDis && !forceDis && !shouldHideStateLayer) ||
+          (prevForceMun && !forceMun && !shouldHideStateLayer) ||
+          (prevVoteCircle && !voteCircle && !shouldHideStateLayer) ||
+          !shouldHideStateLayer;
 
         if (shouldShowStateLayer) {
           showLayer(`${raceType}-mx-${year}-state`);
@@ -1171,7 +1227,6 @@ const Home = () => {
       addFilter,
       prevForceDis,
       prevForceMun,
-      prevParty,
       prevVoteCircle
     ]
   );
@@ -1190,6 +1245,10 @@ const Home = () => {
         sourceLayer: sourceLayer,
         filter: filter
       });
+
+      if (stateFeatures.length > 0) {
+        stateFeatures[0].sourceLayer = sourceLayer;
+      }
 
       return stateFeatures;
     },
@@ -1409,11 +1468,10 @@ const Home = () => {
             raceType === "cong" &&
             lastDisFeature &&
             lastDisFeature.current &&
-            lastFeature.current &&
-            (lastDisFeature.current.properties.ID_ESTADO !==
-              lastFeature.current.properties.ID_ESTADO ||
-              lastDisFeature.current.properties.ENTIDAD !==
-                lastFeature.current.properties.ID_ESTADO)
+            (lastDisFeature.current[0].properties.ID_ESTADO !==
+              lastFeature.properties.ID_ESTADO ||
+              lastDisFeature.current[0].properties.ENTIDAD !==
+                lastFeature.properties.ID_ESTADO)
           ) {
             selectFeature(
               lastDisFeature.current,
@@ -1491,6 +1549,20 @@ const Home = () => {
 
     map.current.on("load", () => {
       firstLayerId.current = "states";
+
+      map.current.on("move", () => {
+        const bounds = map.current.getBounds();
+        const mapPosition = {
+          center: map.current.getCenter(),
+          bounds: {
+            sw: bounds.getSouthWest(),
+            ne: bounds.getNorthEast()
+          },
+          zoom: map.current.getZoom()
+        };
+
+        // console.log("Map Position", mapPosition);
+      });
 
       map.current.on("click", function (e) {
         // Prevent the map's default behavior of zooming
@@ -1595,6 +1667,57 @@ const Home = () => {
         .getElementById("react-sketch-canvas__stroke-group-0")
         .setAttribute("mask", "");
   }, []);
+  
+  const isJsonString = useCallback((str) => {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+  }, []);
+  
+  const connection = useRef(null); 
+
+  useEffect(() => {
+    const socket = new WebSocket(process.env.REACT_APP_WS)
+
+    // Connection opened
+    socket.addEventListener("open", (event) => {
+      //socket.send("Connection established")
+    })
+
+    // Listen for messages
+    socket.addEventListener("message", (event) => {
+      console.log("Message from server: ", event.data);
+      if (isJsonString(event.data)) {
+        let msg = JSON.parse(event.data);
+        console.log(msg);
+        if (msg.action === 'set_racetype_year' && msg.racetype && msg.year) {
+          dispatch(updateYear(msg.year));
+          dispatch(updateRaceType(msg.racetype));
+        }
+        else if (msg.action === 'set_bookmark' && msg.bookmark) {
+          dispatch(setShowBookmarks(true));
+          const bm = 'bm_' + msg.bookmark.replace(/[\W_]+/g, "_") + '_go';
+          setTimeout(
+          () => {
+            if (document.getElementById(bm))
+              document.getElementById(bm).click()
+            },
+            200
+          );
+        }
+      }
+      else {
+        console.log('Invalid JSON Format.');
+      }
+    })
+
+    connection.current = socket;
+
+    return () => connection.current.close()
+  }, [dispatch, isJsonString])
 
   return (
     <AppShell
@@ -1631,24 +1754,15 @@ const Home = () => {
           {/* Header content */}
         </Header>
       }
-      styles={(theme) => ({
-        main: {
-          backgroundColor:
-            theme.colorScheme === "dark"
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0]
-        }
-      })}
     >
-      <TopBar />
+      <TopBar app={app} />
       <Box
+        className="map-root"
         style={{
           width: "100%",
-          height: "calc(100vh - 102px)",
           display: "flex",
           position: "absolute",
-          left: "0px",
-          top: 102
+          left: "0px"
         }}
       >
         <div ref={mapContainer} className="map-container" />

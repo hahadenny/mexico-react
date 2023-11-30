@@ -1,14 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@100;200;300;400;500;600;700;800;900&display=swap");
 @import "./variables";
 
 body {
   padding: 0;
   margin: 0;
-  background-color:#fff;
+  background-image: url("../src/assets/img/bg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .root {
   display: flex;
+}
+
+.map-root {
+  height: calc(100vh - 79px);
+  top: 79;
 }
 
 .map-container {
@@ -21,202 +28,501 @@ body {
 }
 
 .ag-theme-alpine {
-    --ag-background-color: transparent !important;
-    --ag-odd-row-background-color: transparent !important;
-    --ag-selected-row-background-color: rgba(61,61,61,0.3) !important;
-    --ag-row-hover-color: rgba(188,188,188,0.3) !important;
-    --ag-secondary-border-color: #ddd !important;
+  --ag-background-color: transparent !important;
+  --ag-odd-row-background-color: transparent !important;
+  --ag-selected-row-background-color: rgba(61, 61, 61, 0.3) !important;
+  --ag-row-hover-color: rgba(188, 188, 188, 0.3) !important;
+  --ag-secondary-border-color: #ddd !important;
 }
 
 .ag-header-cell-label {
-    justify-content: center;
+  justify-content: center;
 }
 
 .ag-cell {
-    text-align: left;
-    border: 1px transparent !important;
+  text-align: left;
+  border: 1px transparent !important;
 }
 
 .ag-body-horizontal-scroll-viewport {
-    overflow-x: hidden !important;
+  overflow-x: hidden !important;
 }
 
 .ag-cell-value {
-    // overflow: hidden;
-    overflow: visible !important;
+  // overflow: hidden;
+  overflow: visible !important;
 }
 
 .ag-row-drag {
-    margin-right: 9px !important;
+  margin-right: 9px !important;
 }
 
-#menuBookmarkslisting .ag-header, #menuBookmarkslisting .ag-body-horizontal-scroll, #menuBookmarkslisting .ag-body-vertical-scroll {
-    display: none;
+#menuBookmarkslisting .ag-header,
+#menuBookmarkslisting .ag-body-horizontal-scroll,
+#menuBookmarkslisting .ag-body-vertical-scroll {
+  display: none;
 }
 
 #menuBookmarkslisting .ag-root-wrapper {
-    border: none;
+  border: none;
 }
 
 #menuBookmarkslisting .ag-center-cols-viewport {
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
 
 #menuBookmarkslisting .ag-text-field-input {
-    margin-left: 8px;
+  margin-left: 8px;
 }
 
 .MuiDialogTitle-root {
-    color: var(--primary-main);
+  color: var(--primary-main);
 }
 
 .MuiPaper-root {
-    border: solid 1px var(--primary-main);
+  border: solid 1px var(--primary-main);
 }
 
 .mantine-Modal-header {
-    padding: 0px;
-    padding-right: 5px;
-    padding-top: 5px;
+  padding: 0px;
+  padding-right: 5px;
+  padding-top: 5px;
 }
 
 .mantine-Modal-inner {
-    padding-left: 0px;
+  padding-left: 0px;
 }
 
 .mantine-TextInput-input {
-    border: none;
-    border-bottom: solid 1px var(--primary-main);
-    padding: 0px;
+  border: none;
+  border-bottom: solid 1px var(--primary-main);
+  padding: 0px;
 }
 
 .mantine-Dialog-closeButton {
-    top: 5px;
-    right: 5px;
+  top: 5px;
+  right: 5px;
 }
 
 #raceboard.board-opened {
-  animation: linearwipe 0.7s steps(100, end), flash 1s steps(100, end); 
+  animation: linearwipe 0.7s steps(100, end), flash 1s steps(100, end);
 }
 
-@keyframes linearwipe{ 
-  from { 
-    background:linear-gradient(rgba(133, 133, 133, 0.3),rgba(133, 133, 133, 0.3)) left/0% 100% no-repeat;     
-  } 
-  to {
-    background-size:200% 200%;
-    background-position:left;
+@keyframes linearwipe {
+  from {
+    background: linear-gradient(
+        rgba(133, 133, 133, 0.3),
+        rgba(133, 133, 133, 0.3)
+      )
+      left/0% 100% no-repeat;
   }
-} 
+  to {
+    background-size: 200% 200%;
+    background-position: left;
+  }
+}
 
-@keyframes flash{ 
-  from { 
-    opacity: 0;  
-  } 
+@keyframes flash {
+  from {
+    opacity: 0;
+  }
   to {
   }
-} 
+}
 
 #racechart.board-opened {
   width: calc(100% - 7.5% - 0px - 2%) !important;
 }
 
 .mantine-Navbar-root .mantine-Text-root {
-    background-color: rgba(188,188,188,0.3);
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 0px;
-    padding-top: 7px;
-    padding-bottom: 7px;
-    text-align: center;
-    border-left: solid 13px #5a5a5a;
+  background-color: rgba(188, 188, 188, 0.3);
+  margin-top: 4px;
+  margin-bottom: 4px;
+  margin-left: 0px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  text-align: center;
+  border-left: solid 13px #5a5a5a;
 }
 
 .mantine-Navbar-root .mantine-Group-root {
-    margin-left: -48px;
+  margin-left: -48px;
 }
 
 .mantine-ActionIcon-root {
-    color: #000;
+  color: #000;
 }
 
 .mantine-ActionIcon-root:hover {
-    background-color: rgba(254,254,254,0.5) !important;
+  background-color: rgba(254, 254, 254, 0.5) !important;
 }
 
 .mantine-Switch-track {
-    background-color: #000 !important;
-    border-color: #000 !important;
-    color: #fff !important;
-    font-size: 10px;
+  background-color: #000 !important;
+  border-color: #000 !important;
+  color: #fff !important;
+  font-size: 10px;
 }
 
 .mantine-Modal-overlay {
-    z-index: 201 !important;
+  //z-index: 201 !important;
 }
 
 .mantine-NumberInput-label {
-    word-break: inherit !important;
+  word-break: inherit !important;
 }
 
 .mantine-NumberInput-input {
-    padding-left: 3px !important;
+  padding-left: 3px !important;
 }
 
 @media (min-width: 48em) {
-    .mantine-Navbar-root {
-        width: 7.5%;
-        min-width: 7.5%;
-    }
+  .mantine-Navbar-root {
+    width: 7.5%;
+    min-width: 7.5%;
+  }
 }
 
 .chrome-picker {
-    width: 145px !important;
+  width: 145px !important;
 }
 
 .mapboxgl-map {
-    font-family: 'Libre Franklin', sans-serif !important;
+  font-family: "Libre Franklin", sans-serif !important;
 }
 
 .mapboxgl-popup-content {
-    color: #373232;
-    padding: 1px 12px;
-    font-size: 11px;
-    // background-color: rgba(238,238,238,0.8);
-    background-color: rgba(255,255,255,0.8);
-    backdrop-filter: blur(8px);
-    // border: solid 2px $primary_hex;
-    border: solid 2px #ffffff;    
+  color: #373232;
+  padding: 1px 12px;
+  font-size: 11px;
+  // background-color: rgba(238,238,238,0.8);
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  // border: solid 2px $primary_hex;
+  border: solid 2px #ffffff;
 }
 
 .mapboxgl-popup-tip {
-    border-top-color: #eeeeee !important;
-    border-bottom-color: #eeeeee !important;
-    display:none;
+  border-top-color: #eeeeee !important;
+  border-bottom-color: #eeeeee !important;
+  display: none;
 }
 
 .flexbox-fix input {
-    background-color: #fff;
+  background-color: #fff;
 }
 
 .topBar {
-    box-shadow: none !important;
+  box-shadow: none !important;
+  height: 79px;
 }
 
 .raceCandBox {
-    margin-top: -7px;
+  margin-top: -7px;
 }
 
 // Mapbox attribution section
 .mapboxgl-ctrl-bottom-left {
-    left: 8%;
+  left: 8%;
 }
 .mapboxgl-ctrl-attrib-inner > a[title*="OpenStreetMap"] {
-    display: none;
+  display: none;
 }
 // END Mapbox attribution section
 
 .mapboxgl-popup-content {
+  padding: 0;
+  margin: 0;
+  width: 280px;
+  background-color: white;
+  border: solid 1px #fff;
+  padding-bottom: 0.3rem;
+  border-bottom-left-radius: 3px 3px;
+  border-bottom-right-radius: 3px 3px;
+  box-shadow: 1px 1px 10px #222;
+}
+
+.mapPopup {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  width: 100%;
+  line-height: 2rem;
+  font-weight: bold;
+}
+
+.mapPopupTitle {
+  flex: 1;
+  color: white;
+  font-size: 1.6rem;
+  margin-bottom: 0rem;
+  font-weight: 600;
+  padding-top: 0.2rem;
+}
+
+.mapPopupLocation {
+  flex: 1;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.3rem;
+}
+
+.mapPopupParty {
+  flex: 1;
+  font-size: 1.1rem;
+  line-height: 1.7rem;
+  margin-bottom: 0rem;
+  margin-top: 0.3rem;
+  font-weight: 800;
+}
+
+.mapPopupVotes {
+  flex: 1;
+  color: #000;
+  font-size: 0.75rem;
+  line-height: 1.5rem;
+  font-weight: 600 !important;
+}
+
+.mapPopupTurnout {
+  flex: 1;
+  color: #000;
+  font-size: 0.75rem;
+  line-height: 1.5rem;
+  font-weight: 600 !important;
+  margin-top: -3%;
+  margin-bottom: -3%;
+}
+
+.voteNum {
+  font-size: 1rem;
+  margin-top: -1.6rem;
+  flex: 1;
+  margin-top: -8%;
+}
+
+.voteNumCong {
+  font-size: 1rem;
+}
+
+@media screen and (min-width: 3000px) {
+  :root {
+    --ag-grid-size: 11px !important;
+  }
+
+  .mantine-Navbar-root {
+    margin-top: 170px;
+  }
+
+  .mantine-Dialog-closeButton {
+    scale: 2;
+    top: 20px;
+    right: 20px;
+  }
+
+  .home,
+  .back {
+    font-size: 35px !important;
+    margin-bottom: 15px;
+    margin-top: 0px !important;
+    padding: 12px 0px !important;
+    font-weight: 500;
+  }
+
+  .tabler-icon-home {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+
+  .mantine-Navbar-root .mantine-Text-root {
+    font-size: 29px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    border-left: solid 15px #5a5a5a;
+    font-weight: 600;
+  }
+
+  .mantine-Navbar-root .mantine-Input-input,
+  .mantine-Navbar-root .mantine-InputWrapper-label,
+  .menuLabel {
+    font-size: 28px;
+  }
+
+  .mantine-Navbar-root .mantine-NumberInput-input {
+    height: 49px;
+  }
+
+  .mantine-Navbar-root .mantine-Group-root {
+    font-size: 29px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .mantine-Navbar-root .mantine-UnstyledButton-root {
+    border-left: solid 35px #000;
+    padding-left: 40px;
+  }
+
+  .mantine-Switch-track {
+    font-size: 14px;
+  }
+
+  .mapboxgl-popup-content {
+    scale: 2;
+  }
+
+  .raceboard {
+    width: 1000px !important;
+    //border-left: solid 12px $primary_hex !important;
+    font-size: 31px !important;
+    top: 158px;
+  }
+
+  .raceboardTitleBox {
+    //border-bottom: solid 7px #111 !important;
+    margin-bottom: 20px !important;
+  }
+
+  .raceboardTitle {
+    font-size: 82px !important;
+    line-height: 90px !important;
+    padding-top: 19px !important;
+    font-weight: 600;
+  }
+
+  .raceboardSubtitle {
+    font-size: 46px !important;
+    font-weight: 600;
+    line-height: 50px !important;
+    margin-bottom: -10px !important;
+  }
+
+  .raceCheck {
+    margin-left: 0px !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .partyBox {
+    padding-top: 1.5rem !important;
+    margin-top: 10px !important;
+    margin-bottom: 0.9rem !important;
+    height: 25%;
+  }
+
+  .partySubBox {
+    //#border-bottom: solid 2px #111 !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .party4SubBox {
+    //#margin-bottom: 10px !important;
+  }
+
+  .racePartyName {
+    font-size: 44px !important;
+    line-height: 63px !important;
+    padding-bottom: 10px !important;
+    font-weight: 800;
+  }
+
+  .racePartyNameLong {
+    font-size: 40px !important;
+    line-height: 40px !important;
+    padding-bottom: 10px !important;
+  }
+
+  .raceboardImgCong {
+    width: 6rem !important;
+    height: 6rem !important;
+  }
+
+  .raceCheckCong {
+    margin-left: -0.1rem !important;
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .raceElectCheckCong {
+    margin-left: 0.5rem !important;
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .raceboardWinnerCong {
+    font-size: 2rem !important;
+  }
+
+  .raceboardWinnerImgBox {
+    width: 25% !important;
+    max-height: 10.72rem;
+  }
+
+  .raceName {
+    height: 135px !important;
+    font-size: 2.2rem;
+  }
+
+  .raceTitle {
+    font-size: 25px !important;
+    margin-bottom: 13px !important;
+    margin-top: 0.6rem;
+  }
+
+  .raceCandBox {
+    padding-left: 5px !important;
+    padding-top: 25px !important;
+  }
+
+  .percentNum {
+    font-size: 9rem !important;
+    margin-top: 2.2rem !important;
+  }
+
+  .percentNumCong {
+    font-size: 9rem !important;
+    margin-bottom: -2.9rem;
+    margin-top: -2.8rem;
+  }
+
+  .percent {
+    font-size: 55px !important;
+  }
+
+  .voteNum {
+    font-size: 2.2rem !important;
+    margin-top: -12%;
+  }
+
+  .voteNumCong {
+    font-size: 2.2rem !important;
+  }
+
+  .raceChart {
+    width: calc(100% - 7.5% - 1000px - 2%) !important;
+    bottom: 5rem !important;
+  }
+
+  .raceChartTitle {
+    font-size: 3rem !important;
+  }
+
+  .raceChartParty {
+    font-size: 1.6rem !important;
+  }
+
+  .raceChartNum {
+    font-size: 2.6rem !important;
+  }
+
+  .raceChartBar {
+    margin-bottom: 1rem !important;
+  }
+
+  .mapboxgl-popup-content {
     padding: 0;
     margin: 0;
     width: 280px;
@@ -225,403 +531,149 @@ body {
     padding-bottom: 0.3rem;
     border-bottom-left-radius: 3px 3px;
     border-bottom-right-radius: 3px 3px;
-}
+  }
 
-.mapPopup {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    width: 100%;
-    line-height: 2rem;
-    font-weight: bold;
-}
+  .topBar {
+    height: 158px;
+  }
 
-.mapPopupTitle {
-    flex: 1;
-    color: white;
-    font-size: 1.6rem;
-    margin-bottom: 0rem;
-    font-weight: 600;
-    padding-top: 0.2rem;
-}
+  .map-root {
+    height: calc(100vh - 158px);
+    top: 158px;
+  }
 
-.mapPopupLocation {
-    flex: 1;
-    font-size: 1.1rem;
-    font-weight: 600;
-    line-height: 1.3rem;
-}
+  .yearText {
+    font-size: 127px !important;
+  }
 
-.mapPopupParty {
-    flex: 1;
-    font-size: 1.4rem;   
-    line-height: 1.7rem;
-    margin-bottom: 0rem; 
-    margin-top: 0.3rem;
-    font-weight: 800;
-}
+  .topTitleText {
+    font-size: 8rem !important;
+    padding-top: 1rem;
+  }
 
-.mapPopupVotes {
-    flex: 1;
-    color: #000;
-    font-size: 0.75rem;
-    line-height: 1.5rem;
-    background-color: #fff;
-    font-weight: 600 !important;
-}
+  .ag-cell-value {
+    font-size: 28px;
+    padding-left: 3px;
+    margin-top: 20px;
+  }
 
-@media screen and (min-width: 3000px) {
-    :root {
-        --ag-grid-size: 11px !important;
-    }
+  .ag-icon {
+    font-size: 30px !important;
+    margin-top: 23px;
+  }
 
-    .mantine-Navbar-root {
-        margin-top: 170px;
-    }
+  .ag-row {
+    height: 85px !important;
+  }
 
-    .mantine-Dialog-closeButton {
-        scale: 2;
-        top: 20px;
-        right: 20px;
-    }
-    
-    .home,.back {
-        font-size: 35px !important;
-        margin-bottom: 15px;
-        margin-top: 0px !important;
-        padding: 12px 0px !important;
-        font-weight: 500;
-    }
-    
-    .tabler-icon-home {
-        width: 2.4rem;
-        height: 2.4rem;
-    }
+  .mantine-Navbar-root .mantine-ActionIcon-root {
+    border-left: none !important;
+    padding-left: 0px !important;
+    margin-top: -40px !important;
+    width: 2.5rem;
+    min-height: 2.5rem;
+  }
 
-    .mantine-Navbar-root .mantine-Text-root {
-        font-size: 29px;
-        margin-top: 20px;
-        margin-bottom: 20px;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        border-left: solid 15px #5a5a5a;
-        font-weight: 600;
-    }
-    
-    .mantine-Navbar-root .mantine-Input-input,  .mantine-Navbar-root .mantine-InputWrapper-label, .menuLabel {
-        font-size: 28px;
-    }
-    
-    .mantine-Navbar-root  .mantine-NumberInput-input {
-        height: 49px;
-    }
-    
-    .mantine-Navbar-root .mantine-Group-root {
-        font-size: 29px;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        font-weight: 600;
-    }
-    
-    .mantine-Navbar-root .mantine-UnstyledButton-root {
-        border-left: solid 35px #000;
-        padding-left: 40px;
-    }
-    
-    .mantine-Switch-track {
-        font-size: 14px;
-    }
+  .mantine-Navbar-root .MuiSvgIcon-root {
+    font-size: 2.5rem !important;
+  }
 
-    .mapboxgl-popup-content {
-        scale: 2;
-    }
-    
-    .raceboard {
-        width: 1000px !important;
-        //border-left: solid 12px $primary_hex !important;
-        font-size: 31px !important;
-        height: calc(100vh - 11rem) !important;
-    }
-    
-    .raceboardTitleBox {
-        //border-bottom: solid 7px #111 !important;
-        margin-bottom: 20px !important;
-    }
-    
-    .raceboardTitle {
-        font-size: 82px !important;
-        line-height: 90px !important;
-        padding-top: 19px !important;
-        font-weight: 600;
-    }
+  .bookmark_action {
+    margin-left: -4px !important;
+  }
 
-    .raceboardSubtitle {
-        font-size: 46px !important;
-        font-weight: 600;
-        line-height: 50px !important;
-        margin-bottom: -10px !important;
-    }
-    
-    .raceCheck {
-        margin-left: 0px !important;
-        width: 40px !important;
-        height: 40px !important;
-    }
-    
-    .partyBox {
-        padding-top: 1.5rem !important;
-        margin-top: 10px !important;
-        margin-bottom: 0.9rem !important;
-        height: 25%;
-    }
-    
-    .partySubBox {
-        //#border-bottom: solid 2px #111 !important;
-        margin-bottom: 1rem !important;
-    }
-    
-    .party4SubBox {
-        //#margin-bottom: 10px !important;
-    }
-    
-    .racePartyName {
-        font-size: 44px !important;
-        line-height: 63px !important;
-        padding-bottom: 10px !important;
-        font-weight: 800;
-    }
+  .loginBox {
+    max-width: 700px;
+  }
 
-    .racePartyNameLong {
-        font-size: 40px !important;
-        line-height: 40px !important;
-        padding-bottom: 10px !important;
-    }
-    
-    .raceboardImgCong {
-        width: 6rem !important;
-        height: 6rem !important;
-    }
-    
-    .raceCheckCong {
-        margin-left: -0.1rem !important;
-        width: 38px !important;
-        height: 38px !important;
-    }
-    
-    .raceElectCheckCong {
-        margin-left: 0.5rem !important;
-        width: 36px !important;
-        height: 36px !important;
-    }
-    
-    .raceboardWinnerCong {
-        font-size: 2rem !important;
-    }
-    
-    .raceboardWinnerImgBox {
-        width: 25% !important;
-    }
-    
-    .raceName {
-        height: 135px !important;        
-        font-size: 2.2rem;
-    }
-    
-    .raceTitle {
-        font-size: 25px !important;
-        margin-bottom: 13px !important;
-        margin-top: 0.6rem;
-    }
-    
-    .raceCandBox {
-        padding-left: 5px !important;
-        padding-top: 25px !important;
-    }  
-    
-    .percentNum {
-        font-size: 9rem !important;
-        margin-top: 2.2rem !important;
-    }
-    
-    .percentNumCong {
-        font-size: 9rem !important;
-        margin-top: -2rem !important;
-    }
-    
-    .percent {
-        font-size: 55px !important;
-    }
-    
-    .voteNum {
-        font-size: 2.2rem !important;
-        margin-top: -3.5rem !important;
-        margin-right: 55px !important;
-    }
-    
-    .raceChart {
-        width: calc(100% - 7.5% - 1000px - 2%) !important;
-        bottom: 5rem !important;
-    }
+  #login .title {
+    font-size: 127px !important;
+  }
 
-    .raceChartTitle {
-        font-size: 3rem !important;
-    }
-    
-    .raceChartParty {
-        font-size: 1.6rem !important;
-    }
-    
-    .raceChartNum {
-        font-size: 2.6rem !important;
-    }
-    
-    .raceChartBar {
-        margin-bottom: 1rem !important;
-    }
+  #login .mantine-Button-root {
+    margin-top: 74px !important;
+  }
 
-    .mapboxgl-popup-content {
-        padding: 0;
-        margin: 0;
-        width: 280px;
-        background-color: white;
-        border: solid 1px #fff;
-        padding-bottom: 0.3rem;
-        border-bottom-left-radius: 3px 3px;
-        border-bottom-right-radius: 3px 3px;
-    }
-    
-    .topBar {
-        height: 11rem;
-    }
-    
-    .topLogo {
-        //height: 212px !important;
-        //max-width: 368px !important;
-    }
-    
-    .yearText {
-        font-size: 127px !important;
-    }
-    
-    .topTitleText {
-        font-size: 8rem !important;        
-        padding-top: 1rem;
-    }
-    
-    .ag-cell-value {
-        font-size: 28px;
-        padding-left: 3px; 
-        margin-top: 20px;
-    }
-    
-    .ag-icon {
-        font-size: 30px !important; 
-        margin-top: 23px;
-    }
-    
-    .ag-row {
-        height: 85px !important;
-    }
-        
-    .mantine-Navbar-root .mantine-ActionIcon-root {
-        border-left: none !important;
-        padding-left: 0px !important;
-        margin-top: -40px !important;
-        width: 2.5rem;
-        min-height: 2.5rem;
-    }
-    
-    .mantine-Navbar-root .MuiSvgIcon-root {
-        font-size: 2.5rem !important;
-    }
-    
-    .bookmark_action {
-        margin-left: -4px !important;
-    }
-    
-    .loginBox {
-        max-width: 700px;
-    }
-    
-    #login .title {
-        font-size: 127px !important;
-    }
-    
-    #login .mantine-Button-root {
-        margin-top: 74px !important;
-    }
-    
-    .mantine-Paper-root .mantine-Text-root, #login .mantine-Text-root {
-        font-size: 33px;
-    }
-    
-    .mantine-Paper-root .mantine-Button-root, #login .mantine-Button-root {
-        font-size: 28px;
-        margin: 18px;
-        height: 60px;
-    }
-    
-    .mantine-Paper-root .mantine-Title-root, #login .mantine-Title-root {
-        font-size: 45px;
-    }
-    
-    .mantine-Paper-root .mantine-TextInput-label, #login .mantine-TextInput-label, #login .mantine-TextInput-error  {
-        font-size: 28px;
-    }
-    
-    .mantine-Paper-root .mantine-TextInput-input, #login .mantine-TextInput-input {
-        font-size: 28px;
-        height: 77px;
-        border-bottom: solid 2px $primary_hex;
-    }
-    
-    .mantine-Notification-root {
-        width: 650px;
-        right: 200px;
-    }
-    
-    .mantine-Notification-description {
-        font-size: 30px;        
-    }
-    
-    .chrome-picker {
-        width: 288px !important;
-    }
-    
-    .chrome-picker input { 
-        font-size: 28px !important;
-        padding: 10px 0px 7px 0px;
-    }
-    
-    .chrome-picker label { 
-        font-size: 16px !important;
-        margin-top: 3px !important;
-    }
-    
-    .colorPickerPop .flexbox-fix:nth-of-type(1) div:nth-of-type(1) div:nth-of-type(1) {
-        height: 20px !important;
-        margin-top: 0px !important;
-        padding-left: 5px;
-    }
-    
-    .colorPickerColor {
-        width: 40px !important;
-        height: 40px !important;
-    }
-    
-    .colorPickerPop {
-        left: -15px !important;
-        top: -315px !important;
-        width: 288px !important;
-    }
-    
-    .hue-horizontal {
-        height: 20px !important;
-        margin-top: -5px;
-    }
-    
-    .hue-horizontal div div {
-        width: 12px !important;
-        height: 20px !important;
-    }
+  .mantine-Paper-root .mantine-Text-root,
+  #login .mantine-Text-root {
+    font-size: 33px;
+  }
+
+  .mantine-Paper-root .mantine-Button-root,
+  #login .mantine-Button-root {
+    font-size: 28px;
+    margin: 18px;
+    height: 60px;
+  }
+
+  .mantine-Paper-root .mantine-Title-root,
+  #login .mantine-Title-root {
+    font-size: 45px;
+  }
+
+  .mantine-Paper-root .mantine-TextInput-label,
+  #login .mantine-TextInput-label,
+  #login .mantine-TextInput-error {
+    font-size: 28px;
+  }
+
+  .mantine-Paper-root .mantine-TextInput-input,
+  #login .mantine-TextInput-input {
+    font-size: 28px;
+    height: 77px;
+    border-bottom: solid 2px $primary_hex;
+  }
+
+  .mantine-Notification-root {
+    width: 650px;
+    right: 200px;
+  }
+
+  .mantine-Notification-description {
+    font-size: 30px;
+  }
+
+  .chrome-picker {
+    width: 288px !important;
+  }
+
+  .chrome-picker input {
+    font-size: 28px !important;
+    padding: 10px 0px 7px 0px;
+  }
+
+  .chrome-picker label {
+    font-size: 16px !important;
+    margin-top: 3px !important;
+  }
+
+  .colorPickerPop
+    .flexbox-fix:nth-of-type(1)
+    div:nth-of-type(1)
+    div:nth-of-type(1) {
+    height: 20px !important;
+    margin-top: 0px !important;
+    padding-left: 5px;
+  }
+
+  .colorPickerColor {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .colorPickerPop {
+    left: -15px !important;
+    top: -315px !important;
+    width: 288px !important;
+  }
+
+  .hue-horizontal {
+    height: 20px !important;
+    margin-top: -5px;
+  }
+
+  .hue-horizontal div div {
+    width: 12px !important;
+    height: 20px !important;
+  }
 }
